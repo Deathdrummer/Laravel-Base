@@ -122,14 +122,14 @@ Route::post('/reset-password', function (Request $request) {
 
 
 
-// сайт prefix('site') уже подключен
-Route::middleware(['lang'])->get('/{section?}', function (Request $request, $section = null) {
-	if (!Auth::guard('site')->check() && $section) return redirect()->route('site');
+// сайт 
+Route::middleware(['lang'])->get('/{page?}', function (Request $request, $page = null) {
+	if (!Auth::guard('site')->check() && $page) return redirect()->route('site');
 	
 	$settingsService = App::make(Settings::class);
 	$settings = $settingsService->getMany('company_name', 'site_start_page', 'show_nav', 'show_locale'); // прописать настройки для вывода в общий шаблон личного кабинета
 	
-	$activeNav = $section ?: ($settings['site_start_page'] ?? 'common');
+	$activeNav = $page ?: ($settings['site_start_page'] ?? 'common');
 	
 	$locale = App::currentLocale();
 	
@@ -205,8 +205,9 @@ Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', functio
 	
 	// Сюда добавляюся любые данные пользователя
 	$data = [
-		'user' 			=> $user,
-		'setting' 		=> $settingsData
+		'user' 		=> $user,
+		'setting' 	=> $settingsData,
+		'pageTitle'	=> $page->page_title,
 	];
 	
 	
