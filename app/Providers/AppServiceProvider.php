@@ -1,6 +1,6 @@
 <?php namespace App\Providers;
 
-use App\Services\Settings as SettingsService;
+use App\Services\System\Settings as SettingsService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;

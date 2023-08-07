@@ -1,6 +1,6 @@
 <?php namespace App\View\Components;
 
-use App\Services\Settings as SettingsService;
+use App\Services\System\Settings as SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\View\Component;
 

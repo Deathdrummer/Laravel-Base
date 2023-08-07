@@ -36,7 +36,7 @@
 	$.ddrCRUD({
 		container: '#adminsList',
 		itemToIndex: 'tr',
-		route: 'ajax/admins',
+		route: 'system/admins',
 		viewsPath: 'admin.section.personal.render.admins',
 		//onInit(container) {},
 	}).then(({error, list, changeInputs, create, store, storeWithShow, update, destroy, remove, query}) => {
@@ -155,7 +155,7 @@
 			let row = $(rowBtn).closest('tr');
 			ddrPopup({
 				title: 'Права доступа <span class="fz13px color-gray">'+pseudoname+'</span> ', // заголовок,
-				url: 'ajax/admins/permissions',
+				url: 'system/admins/permissions',
 				params: {row, view: 'admin.section.personal.render.permissions', user: userId, guard: 'admin'},
 				width: 1000, // ширина окна
 				buttons: ['ui.close'],

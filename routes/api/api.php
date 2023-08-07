@@ -23,11 +23,6 @@ use Illuminate\Support\Facades\Route;
 
 
 // регистрация, авторизация, выход
-Route::controller(SettingsController::class)/* ->middleware(['lang', 'auth:admin', 'isajax:admin']) */->group(function() {
-	Route::post('/settings', 'get');
-	Route::put('/settings', 'set');
-	Route::delete('/settings', 'remove');
-});
 
 
 
@@ -56,7 +51,7 @@ Route::controller(SettingsController::class)/* ->middleware(['lang', 'auth:admin
 	//echo $rool->bar();
 	//if (Gate::check('test')) return view('admin.auth.auth');
     //return view('admin.index');
-})->middleware(['lang', 'auth:admin', 'isajax:admin']); */
+})->middleware(['lang', 'auth:admin', 'isajax']); */
 
 
 

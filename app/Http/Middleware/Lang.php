@@ -1,6 +1,6 @@
 <?php namespace App\Http\Middleware;
 
-use App\Services\Locale;
+use App\Services\System\Locale;
 use Closure;
 use Illuminate\Http\Request;
 

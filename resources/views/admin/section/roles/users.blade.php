@@ -29,7 +29,7 @@
 	$.ddrCRUD({
 		container: '#rolesUsersList',
 		itemToIndex: 'tr',
-		route: 'ajax/roles',
+		route: 'system/roles',
 		globalParams: {guard: 'site'},
 		viewsPath: 'admin.section.roles.render.users',
 		sortField: 'sort'
@@ -151,7 +151,7 @@
 			let roleTitle = $(btn).closest('tr').find('[name="title"]').val();
 			
 			ddrPopup({
-				url: '/ajax/roles/permissions',
+				url: 'system/roles/permissions',
 				params: {view: 'admin.section.roles.render.permissions', guard: 'site', role: roleId},
 				title: '<span class="fz13px color-gray">Права для роли:</span> '+roleTitle,
 				width: 800, // ширина окна
@@ -170,7 +170,7 @@
 				$.setPermissionToRole = (btn, permissionId) => {
 					$(btn).ddrInputs('disable');
 					let checkStat = $(btn).is(':checked') ? 1 : 0;
-					let setPermissionToRole =  axiosQuery('put', 'ajax/roles/permissions', {
+					let setPermissionToRole =  axiosQuery('put', 'system/roles/permissions', {
 						role: parseInt(roleId),
 						permission: parseInt(permissionId),
 						stat: checkStat

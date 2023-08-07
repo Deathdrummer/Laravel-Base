@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\AdminRegRequest;
-use App\Models\AdminUser;
-use App\Services\Settings;
+use App\Models\System\AdminUser;
+use App\Services\System\Settings;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;

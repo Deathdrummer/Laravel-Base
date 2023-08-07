@@ -295,7 +295,7 @@
 	/*
 	$.removeCustomerAction = (tr, done) => {
 		let customerId = $(tr).find('[field="id"]').val();
-		axiosQuery('delete', 'ajax/steps_patterns/steps', {customer: customerId}, 'json').then(({data, error, status, headers}) => {
+		axiosQuery('delete', 'system/steps_patterns/steps', {customer: customerId}, 'json').then(({data, error, status, headers}) => {
 			if (error) {
 				console.log(error?.message, error?.errors);
 			}

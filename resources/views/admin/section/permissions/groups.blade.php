@@ -28,7 +28,7 @@
 	
 	$.removePermissionpGroup = (row, done) => {
 		let id = $(row).find('[field="id"]').attr('value');
-		axiosQuery('delete', 'ajax/permissions/sections', {group: id}).then(({data, error, status, headers}) => {
+		axiosQuery('delete', 'system/permissions/sections', {group: id}).then(({data, error, status, headers}) => {
 			if (data) {
 				done();
 			}

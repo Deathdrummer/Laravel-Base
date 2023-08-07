@@ -56,15 +56,15 @@ class RouteServiceProvider extends ServiceProvider
 				]);
 			
 			Route::middleware('ajax')
-				->prefix('ajax')
+				->prefix('system')
                 ->group([
-					base_path('routes/ajax.php')
+					base_path('routes/system.php')
 				]);
 			
 			Route::middleware('ajax')
-				->prefix('crud')
+				->prefix('ajax')
                 ->group([
-					base_path('routes/crud.php')
+					base_path('routes/ajax.php')
 				]);
         });
 		

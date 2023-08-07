@@ -1,6 +1,6 @@
-<?php namespace App\Services;
+<?php namespace App\Services\System;
 
-use App\Models\Setting;
+use App\Models\System\Setting;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 

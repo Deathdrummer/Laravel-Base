@@ -46,7 +46,7 @@
 		
 		let formData = new FormData(document.getElementById('permissionsSectionsForm'));
 		formData.append('guard', guard);
-		axiosQuery('put', 'ajax/permissions/sections', formData, 'json').then(({data, error, status, headers}) => {
+		axiosQuery('put', 'system/permissions/sections', formData, 'json').then(({data, error, status, headers}) => {
 			$('#refreshSectionsPermissions').ddrInputs('disable');
 			
 			$.each(data, (k, index) => {
@@ -70,7 +70,7 @@
 		let waiting;
 		if (!first) waiting = $('#permissionsCard').ddrWait();
 		
-		axiosQuery('post', 'ajax/permissions/sections', {
+		axiosQuery('post', 'system/permissions/sections', {
 			views: 'admin.section.permissions.render.sections',
 			guard
 		}).then(({data, error, status, headers}) => {

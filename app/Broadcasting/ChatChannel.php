@@ -1,6 +1,6 @@
 <?php namespace App\Broadcasting;
 
-use App\Models\User;
+use App\Models\System\User;
 
 class ChatChannel {
     /**

@@ -439,7 +439,7 @@ window.ddrPopup = function(settings = {}, callback = false) {
 		if (html) return Promise.resolve({data: html});
 		
 		if (lhtml) {
-			return axios.post('/ajax/langline', {line: lhtml}, {
+			return axios.post('/system/langline', {line: lhtml}, {
 				responseType: 'text',
 				signal: controller.signal
 			});
@@ -465,7 +465,7 @@ window.ddrPopup = function(settings = {}, callback = false) {
 	
 	
 	function _getLayout({title = null, buttons = null, dialog = null}) {
-		return axios.post('/ajax/popup',{
+		return axios.post('/system/popup',{
 			title,
 			buttons,
 			buttonsGroup,

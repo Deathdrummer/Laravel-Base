@@ -91,7 +91,7 @@ $(function() {
 			
 			let group = _.replace(location.pathname, /\/?admin\/?/, '') || 'common';
 			
-			axiosQuery('put', 'api/settings', {
+			axiosQuery('put', 'system/settings', {
 				key: setting,
 				value,
 				group

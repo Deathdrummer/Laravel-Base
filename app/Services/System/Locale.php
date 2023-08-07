@@ -1,4 +1,4 @@
-<?php namespace App\Services;
+<?php namespace App\Services\System;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;

@@ -179,7 +179,7 @@
 			bgColor: '#ffffff91'
 		});
 		
-		axiosQuery('post', 'ajax/simplelist', {
+		axiosQuery('post', 'system/simplelist', {
 			id,
 			row,
 			fields,
@@ -235,7 +235,7 @@
 					close();
 					$(btn).closest('tr').find('input, textarea, select, button').ddrInputs('disable');
 					
-					axiosQuery('delete', 'api/settings', {
+					axiosQuery('delete', 'system/settings', {
 						path: setting,
 					}, 'json').then(({data, error, status, headers}) => {
 						if (error) {

@@ -1,9 +1,8 @@
-<?php namespace App\Http\Controllers\crud;
+<?php namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use App\Mail\UserCreated;
-use App\Models\Department;
-use App\Models\User;
+use App\Models\System\User;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -153,7 +152,7 @@ class Users extends Controller {
 		
 		$role = $request->input('role');
 		
-		if (!$user = User::create($validFields)) return response()->json(false);
+		if (!$user = SystemUser::create($validFields)) return response()->json(false);
 		$user->forceFill(['temporary_password' => Crypt::encryptString(Str::random(12))])->save();
 		
 		if ($role) $user->assignRole($role);

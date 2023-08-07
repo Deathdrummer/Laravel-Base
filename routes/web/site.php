@@ -4,9 +4,9 @@ use App\Http\Controllers\Business\OrdersController;
 use App\Http\Controllers\SlackController;
 use App\Http\Controllers\UserController;
 use App\Http\Requests\Auth\UserEmailVerificationRequest;
-use App\Models\Section;
-use App\Models\User;
-use App\Services\Settings;
+use App\Models\System\Section;
+use App\Models\System\User;
+use App\Services\System\Settings;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -24,40 +24,9 @@ use Illuminate\Support\Str;
 
 
 
-Route::post('/preg', function(Request $request) {
-	logger('dfgdfgdf');
-	
-	return response()->json(['foo' => 'bar']);
-	
-	
-	/* $dt = Carbon::create(1975, 12, 25, 14, 15, 16);
-	
-	echo '<pre>';
-		print_r($dt->toDayDateTimeString());
-	exit('</pre>'); */
-	
-	/* $str = '===
-WoW Retail, Vault of the Incarnates Heroic Raid Boost, (us-servers) (selfplayed) (standard-8of8-bosses) (Fury Warrior), (Fri 21 Apr @ 09:30 AM EDT), Lardug, Area 52, Horde, DizzyDwarf#1210527, &A1102B
-WoW Retail, Vault of the Incarnates Heroic Raid Boost, (us-serverss) (selfplayed) (standard-8of8-bosses) (Fury Warrior), (Fri 21 Apr @ 09:30 AM EDT), Lardug, Area 52, Horde, DizzyDwarf#1210527, &A1102B
-https://worldofwarcraft.com/en-us/character/us/area52/Lardug
-===';
-	$res = $order->parse($str);
-	
-	
-	Order::insert($res);
-	
-	echo '<pre>';
-		print_r($res);
-	echo '</pre>'; */
-
-
-});
-
-
-
 
 // регистрация, авторизация, выход
-Route::controller(UserController::class)->middleware(['lang', 'isajax:site'])->group(function() {
+Route::controller(UserController::class)->middleware(['lang', 'isajax'])->group(function() {
 	//Route::get('/reg', 'regForm')->name('site.reg');
 	//Route::post('/register', 'register');
 	Route::get('/auth', 'authForm')->name('site.auth');
@@ -145,24 +114,11 @@ Route::post('/reset-password', function (Request $request) {
 
 
 
-// тест перечисления enum Period
-/* Route::get('test', function() {
-	$status = Period::tryFrom(request('period'));
-	
-	if ($status) dd($status->date()->locale('ru')->isoFormat('DD MMMM YYYY', 'Do MMMM'));
-	else echo 'no';
-}); */
-
-
-
-
 
 
 
 
 //--------------------------------------------------------------------------------------------
-
-
 
 
 
@@ -190,7 +146,7 @@ Route::middleware(['lang'])->get('/{section?}', function (Request $request, $sec
 
 
 // Получить данные раздела
-Route::middleware(['lang', 'auth:site', 'isajax:site'])->post('/get_section', function (Request $request, Settings $settings) {
+Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', function (Request $request, Settings $settings) {
 	$section = $request->input('section');
 	$pageTitle = [];
 	
@@ -287,22 +243,7 @@ Route::post('/lang', function (Request $request) {
     
 	App::setLocale($locale);
 	return response()->json(['set_locale' => true]);
-})->middleware(['isajax:site']);
-
-
-
-
-
-
-
-
-
-
-//-------------------------------------------------------------------------------------------------- Slack
-Route::controller(SlackController::class)->prefix('slack')/* ->middleware(['lang', 'isajax']) */->group(function() {
-	Route::post('/incoming_order', 'incomingOrder'); // Прослушки новых сообщений !!! app\Http\Middleware\VerifyCsrfToken.php добавить !!!
-	Route::post('/send_message', 'send_message'); // Отправить сообщение
-});
+})->middleware(['isajax']);
 
 
 
@@ -318,15 +259,8 @@ Route::controller(SlackController::class)->prefix('slack')/* ->middleware(['lang
 
 //---------------------------------------------------------------------------------------------------- РОУТЫ (с префиксом client)
 
-Route::prefix('client')->middleware(['lang', 'isajax:site'])->group(function() {
-	Route::get('/orders', [OrdersController::class, 'list']);
-	Route::post('/orders/incoming_orders', [OrdersController::class, 'incoming_orders']);
-	Route::post('/orders/to_wait_list', [OrdersController::class, 'to_wait_list']);
-	Route::post('/orders/to_cancel_list', [OrdersController::class, 'to_cancel_list']);
-	
-	Route::get('orders/relocate', [OrdersController::class, 'relocate_client']);
-	Route::get('orders/relocate/get_timesheets', [OrdersController::class, 'get_relocate_timesheets_client']);
-	Route::post('orders/relocate', [OrdersController::class, 'set_relocate_client']);
+Route::prefix('client')->middleware(['lang', 'isajax'])->group(function() {
+	//Route::get('/orders', [OrdersController::class, 'list']);
 });
 
 
@@ -350,25 +284,7 @@ Route::fallback(function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// соглашение (если клиент регистрируется сам)
 // Route::post('/agreement', function (/*Request $request, Rool $rool*/) {
 // 	//$ttt = $rool->bar();
 // 	//$foo = $request->input('foo');
@@ -379,5 +295,3 @@ Route::fallback(function () {
 // 		Настоящее Соглашение заключается между Пользователем и Администрацией Сервиса и
 // 		является публичной офертой в соответствии со ст. 437 Гражданско</p>';
 // });
-
-

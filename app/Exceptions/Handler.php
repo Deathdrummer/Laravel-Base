@@ -1,7 +1,7 @@
 <?php namespace App\Exceptions;
 
 
-use App\Services\Locale;
+use App\Services\System\Locale;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Log;

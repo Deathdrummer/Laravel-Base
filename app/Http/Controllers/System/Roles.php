@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\crud;
+<?php namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 

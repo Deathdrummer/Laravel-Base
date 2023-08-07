@@ -13,8 +13,8 @@ class IsAjaxRequest {
      */
     public function handle(Request $request, Closure $next, $redirect = null) {
         if (!$request->expectsJson()) {
-			if ($redirect) return redirect(route($redirect));
-			logger('DDR -> IsAjaxRequest middleware returned FALSE');
+			return $request->is('admin/*') ? route('admin') : route('site');
+			logger('DDR -> IsAjaxRequest middleware нет redirect');
 			return false;
 		} 
         return $next($request);

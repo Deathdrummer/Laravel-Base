@@ -61,16 +61,11 @@ $.event.special.scrollstop.latency = 20;
 
 $(function() {
 	
+	// Запрет на вызов нативного контекстного меню
 	$('body').on('contextmenu', function(e) {
 		e.preventDefault();
 	});
 	
-	
-	/*ddrQuery.post('/slack/send_message', {
-		webhook: 'https://hooks.slack.com/services/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',
-		text: 'этот текст передан через аргумент'
-	});*/
-
 	
 	
 });

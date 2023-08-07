@@ -1,8 +1,8 @@
-<?php namespace App\Http\Controllers\crud;
+<?php namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use App\Mail\AdminUserCreated;
-use App\Models\AdminUser;
+use App\Models\System\AdminUser;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

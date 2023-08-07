@@ -30,7 +30,7 @@
 	$.ddrCRUD({
 		container: '#permissionsUsersList',
 		itemToIndex: 'tr',
-		route: 'ajax/permissions',
+		route: 'system/permissions',
 		globalParams: {guard: 'site'},
 		viewsPath: 'admin.section.permissions.render.users',
 		sortField: 'sort'

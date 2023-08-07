@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Requests\Auth\AdminEmailVerificationRequest;
-use App\Models\AdminSection;
-use App\Models\AdminUser;
-use App\Services\Settings;
+use App\Models\System\AdminSection;
+use App\Models\System\AdminUser;
+use App\Services\System\Settings;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 
 // регистрация, авторизация, выход
-Route::controller(AdminController::class)->middleware(['lang', 'isajax:admin'])->group(function() {
+Route::controller(AdminController::class)->middleware(['lang', 'isajax'])->group(function() {
 	Route::get('/reg', 'regForm')->name('admin.reg');
 	Route::post('/register', 'register');
 	Route::get('/auth', 'authForm')->name('admin.auth');
@@ -145,7 +145,7 @@ Route::middleware(['lang'])->get('/{section?}', function (Request $request, $sec
 
 
 // Получить данные раздела админки
-Route::middleware(['lang', 'auth:admin', 'isajax:admin'])->post('/get_section', function (Request $request, Settings $settings) {
+Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', function (Request $request, Settings $settings) {
 	$section = $request->input('section');
 	$pageTitle = [];
 	
@@ -216,25 +216,6 @@ Route::middleware(['lang', 'auth:admin', 'isajax:admin'])->post('/get_section', 
 
 
 
-
-/* Route::middleware(['lang'])->get('/', function () {
-	$user = Auth::guard('admin')->user();
-	$locale = App::currentLocale();
-	$hasMainAdmin = AdminUser::all()->count() > 0;
-	return view('admin.index', compact(['locale', 'hasMainAdmin', 'user']));
-})->name('admin'); */
-
-
-
-
-
-
-
-
-
-
-
-
 Route::post('/lang', function (Request $request) {
 	$locale = $request->input('locale');
 	if (!$locale) return response()->json(['no_locale_send' => true]);
@@ -253,17 +234,14 @@ Route::post('/lang', function (Request $request) {
     
 	App::setLocale($locale);
 	return response()->json(['set_locale' => true]);
-})->middleware(['isajax:admin']);
+})->middleware(['isajax']);
 
 
 
 
 
-Route::post('/agreement', function (/*Request $request, Rool $rool*/) {
-	//$ttt = $rool->bar();
-	//$foo = $request->input('foo');
-	//echo '<h1">'.$ttt.' '.$foo.'</h1>';
-	
+
+Route::post('/agreement', function (/*Request $request*/) {
 	return '<p>Настоящее Соглашение с Пользователем, регламентирует условия использования Сервиса, а
 		также права и обязанности Пользователя и Администрации Сервиса.</p><p>
 		Настоящее Соглашение заключается между Пользователем и Администрацией Сервиса и
@@ -289,26 +267,16 @@ Route::post('/agreement', function (/*Request $request, Rool $rool*/) {
 
 
 
+//------------------------------------------------------------------------- Примеры
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Route::post('/file', function(Request $request) {
+// Загрузка файла
+/* Route::post('/file', function(Request $request) {
 	$path = $request->file('my_file')->store('avatars');
 	return $path;
 });
+ */
 
 
 
@@ -317,19 +285,6 @@ Route::post('/file', function(Request $request) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// DeatH123654
 // Доступ в раздел с дополнительным подтверждением пароля
 /* Route::get('/confirm-password', function () {
     return view('auth.confirm-password');

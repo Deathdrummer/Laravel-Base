@@ -1,6 +1,6 @@
 <?php namespace App\Traits;
 
-use App\Services\Settings;
+use App\Services\System\Settings;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 

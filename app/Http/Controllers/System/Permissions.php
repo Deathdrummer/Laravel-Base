@@ -1,8 +1,8 @@
-<?php namespace App\Http\Controllers\crud;
+<?php namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminSection;
-use App\Models\Section;
+use App\Models\System\AdminSection;
+use App\Models\System\Section;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;

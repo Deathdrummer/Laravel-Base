@@ -1,4 +1,4 @@
-<?php namespace App\Models;
+<?php namespace App\Models\System;
 
 use App\Models\Traits\Collectionable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
