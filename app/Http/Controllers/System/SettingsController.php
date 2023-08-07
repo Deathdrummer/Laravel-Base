@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\System;
 
 use App\Services\System\Settings;
 use Illuminate\Http\Request;

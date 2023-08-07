@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\LogController;
+use App\Http\Controllers\System\LogController;
 use Illuminate\Support\Facades\Route;
 
 

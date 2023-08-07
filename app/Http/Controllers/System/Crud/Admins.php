@@ -1,17 +1,18 @@
-<?php namespace App\Http\Controllers\System;
+<?php namespace App\Http\Controllers\System\Crud;
 
 use App\Http\Controllers\Controller;
-use App\Mail\UserCreated;
-use App\Models\System\User;
+use App\Mail\AdminUserCreated;
+use App\Models\System\AdminUser;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\Mime\Encoder\IdnAddressEncoder;
 
-class Users extends Controller {
+class Admins extends Controller {
 	use HasCrudController;
 	
 	
@@ -32,7 +33,6 @@ class Users extends Controller {
 	
 	
 	public function __construct() {
-		
 		$this->middleware('throttle:5,1')->only([
 			'send_email'
 		]);
@@ -72,18 +72,18 @@ class Users extends Controller {
 		$viewPath = $validData['views'];
 		if (!$viewPath) return response()->json(['no_view' => true]);
 		
-		$list = User::with('roles:id')
+		$list = AdminUser::with('roles:id')
 			->withExists(['roles as hasRoles', 'permissions as hasPermissions'])
+			->where('id', '!=', Auth::guard('admin')->user()->id)
+			->where('is_main_admin', '!=', 1)
 			->orderBy('_sort', 'ASC')
 			->get();
 		
-		$list->makeVisible('temporary_password');
-		
-		$this->_addRolesToData();
+		$this->addRolesToData();
 		
 		$itemView = $viewPath.'.item';
 		
-		return $this->viewWithLastSortIndex(User::class, $viewPath.'.list', compact(['list', 'itemView']));
+		return $this->viewWithLastSortIndex(AdminUser::class, $viewPath.'.list', compact(['list', 'itemView']));
     }
 	
 	
@@ -97,7 +97,7 @@ class Users extends Controller {
 		$viewPath = $request->input('views');
 		$newItemIndex = $request->input('newItemIndex');
 		
-		$this->_addRolesToData();
+		$this->addRolesToData();
 		
 		if (!$viewPath) return response()->json(['no_view' => true]);
 		return $this->view($viewPath.'.new', ['index' => $newItemIndex]);
@@ -115,7 +115,8 @@ class Users extends Controller {
 		$item = $this->_storeRequest($request);
 		return response()->json($item);
     }
-    
+	
+	
 	
 	/**
      * Создание ресурса и показ записи
@@ -125,12 +126,12 @@ class Users extends Controller {
      */
     public function store_show(Request $request) {
 		$viewPath = $request->input('views');
-
+		
 		$item = $this->_storeRequest($request);
 		
 		if (!$viewPath) return response()->json(['no_view' => true]);
 		
-		$this->_addRolesToData();
+		$this->addRolesToData();
 		
 		return $this->view($viewPath.'.item', $item);
     }
@@ -143,33 +144,23 @@ class Users extends Controller {
 		$request->merge(['email' => encodeEmail($request->input('email'))]);
 		
 		$validFields = $request->validate([
-			'email' 		=> 'required|email|unique:users,email',
-			'pseudoname'	=> 'required|string|max:50|unique:users,pseudoname',
+			'email' 		=> 'required|email|unique:admin_users,email',
+			'pseudoname'	=> 'required|string|max:50|unique:admin_users,pseudoname',
 			'role'			=> 'numeric|nullable|exclude',
-			'department_id'	=> 'numeric|nullable',
 			'_sort'			=> 'required|regex:/[0-9]+/'
 		]);
-		
+
 		$role = $request->input('role');
+		$validFields['password'] = Str::random(12);
 		
-		if (!$user = SystemUser::create($validFields)) return response()->json(false);
-		$user->forceFill(['temporary_password' => Crypt::encryptString(Str::random(12))])->save();
+		if (!$adminUser = AdminUser::create($validFields)) return response()->json(false);
+
+		if ($role) $adminUser->assignRole($role);
 		
-		if ($role) $user->assignRole($role);
+		$validFields['email'] = decodeEmail($validFields['email']);
+		Mail::to($adminUser->email)->send(new AdminUserCreated($validFields));
 		
-		//$validFields['email'] = decodeEmail($validFields['email']);
-		//Mail::to($user->email)->send(new UserCreated($validFields));
-		/* 
-		$user = User::with('roles:id')
-			->withExists(['roles as hasRoles', 'permissions as hasPermissions'])
-			->find($user->id); */
-		
-		$user->load('roles:id');
-		$user->loadExists(['roles as hasRoles', 'permissions as hasPermissions']);
-		
-		$user->fresh();
-		$user->makeVisible('temporary_password');
-		return $user;
+		return AdminUser::with('roles:id')->withExists(['roles as hasRoles', 'permissions as hasPermissions'])->find($adminUser->id);
 	}
 	
 	
@@ -211,22 +202,19 @@ class Users extends Controller {
     public function update(Request $request, $id) {
 		$validated = $request->validate([
 			//'email' 	=> 'required|email'
-			'role' 			=> 'numeric|nullable',
-			'department_id'	=> 'numeric|nullable',
+			'role' 	=> 'numeric|nullable',
 		]);
 		
-		$user = User::where('id', $id)->first();
-		
-		$user->department_id = $validated['department_id'];
-		$user->save();
-		
+		$user = AdminUser::where('id', $id)->first();
 		if ($validated['role']) {
-			$data = $user->syncRoles($validated['role']);
+				$data = $user->syncRoles($validated['role']);
 			$user->permissions()->detach();
+			
 			return response()->json($data);
 		}
 		
-		return response()->json(true);
+		return response()->json(false);
+		//$pdateData = AdminUser::where('id', $id)->update($validated);
     }
 	
 	
@@ -238,7 +226,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(?int $id = null) {
-		$stat = User::destroy($id);
+		$stat = AdminUser::destroy($id);
 		return response()->json($stat);
     }
 	
@@ -250,41 +238,11 @@ class Users extends Controller {
 	 */
 	public function send_email(Request $request) {
 		if (!$id = $request->input('id')) return response()->json(false);
-		//if (!$user = User::select('email', 'temporary_password')->where('id', $id)->first()) return response()->json(false);
-		if (!$user = User::find($id)) return response()->json(false);
-		
-		if (isset($user->temporary_password)) {
-			$password = Crypt::decryptString($user->temporary_password);
-			$user->forceFill([
-				'password' => $password,
-				'temporary_password' => null
-				])->save();
-			
-			$userData = [
-				'email' => $user->email,
-				'password' => $password,
-			];
-			
-			$stat = Mail::to($user->email)->send(new UserCreated($userData));
-			return response()->json($stat);
-		}
-		
-		
-		$stat = Mail::to($user->email)->send(new UserCreated(['email' => $user->email]));
+		if (!$user = AdminUser::select('email')->where('id', $id)->first()) return response()->json(false);
+		$user['email'] = encodeEmail($user['email']);
+		$stat = Mail::to($user->email)->send(new AdminUserCreated($user));
 		return response()->json($stat);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	//----------------------------------------------------------------------------------------
-	
-	
-	
 	
 	
 	
@@ -292,12 +250,12 @@ class Users extends Controller {
 	 * @param integer $group
 	 * @return 
 	 */
-	private function _addRolesToData() {
+	public function addRolesToData() {
 		$this->data['roles'] = [];
 		$this->data['roles_custom'] = [];
 		
 		$allRoles = Role::select(['id', 'title'])
-			->where(['guard_name' => 'site'])
+			->where(['guard_name' => 'admin'])
 			->whereNot('title', null)->get()
 			->mapWithKeys(function ($item, $key) {
 				$newItem[$key] = [
@@ -323,9 +281,6 @@ class Users extends Controller {
 	
 	
 	
-
-	
-	
 	/**
 	 * @param 
 	 * @return 
@@ -337,18 +292,18 @@ class Users extends Controller {
 			'guard'	=> 'required|string',
 		]);
 		
-		if (!$user = User::find($valid['user'])) return response()->json(false);
+		if (!$user = AdminUser::find($valid['user'])) return response()->json(false);
 		
 		$allPermissions = Permission::where('guard_name', $valid['guard'])
 			->whereNot('group', null)
 			->get()
 			->sortBy('sort', SORT_NATURAL)
 			->groupBy('group');
-		
+			
 		$userPermissions = $user->getAllPermissions()->pluck('id')->toArray();
 		
 		$this->addSettingToGlobalData('permissions_groups:groups', 'id', null, 'group:'.$valid['guard']);
-		
+
 		usort($this->data['groups'], function($a, $b) {
 			if (!isset($a['sort']) || !isset($b['sort'])) return 0;
 			return strnatcmp($a['sort'], $b['sort']);
@@ -375,11 +330,12 @@ class Users extends Controller {
 			'stat'			=> 'required|numeric'
 		]);
 		
-		if (!$user = User::find($valid['user'])) return response()->json(false);
+		if (!$user = AdminUser::find($valid['user'])) return response()->json(false);
 		
 		if ($hasRole = !!count($user->roles)) {
 			$rolesPpermissions = $user->getPermissionsViaRoles();
 			$user->syncRoles();
+			
 			$user->givePermissionTo($rolesPpermissions);
 		}
 		

@@ -1,17 +1,17 @@
-<?php namespace App\Http\Controllers\System;
+<?php namespace App\Http\Controllers\System\Crud;
 
 use App\Http\Controllers\Controller;
-use App\Models\System\AdminSection;
-use App\Models\System\Section;
+
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
-class Permissions extends Controller {
+
+class Roles extends Controller {
 	use HasCrudController;
+	
 	
 	/**
      * Глобальные данные
@@ -26,6 +26,7 @@ class Permissions extends Controller {
      * @var array
      */
 	protected $data = [];
+	
 	
 	
 	public function __construct() {
@@ -45,6 +46,7 @@ class Permissions extends Controller {
 			'store_show',
 			'edit',
 		]); */
+		
 	}
 	
 	
@@ -62,16 +64,11 @@ class Permissions extends Controller {
 		$viewPath = $validData['views'];
 		if (!$viewPath) return response()->json(['no_view' => true]);
         
-		$list = Permission::where('guard_name', $validData['guard'])
-					->whereNot('name', 'like', 'section-%')
-					->orderBy('sort', 'ASC')
-					->get();
-				
-		$this->addSettingToGlobalData('permissions_groups', 'id', 'name', 'group:'.$validData['guard']);
+		$list = Role::where('guard_name', $validData['guard'])->orderBy('sort', 'ASC')->get();
 		
 		$itemView = $viewPath.'.item';
 		
-		return $this->viewWithLastSortIndex(Permission::class, $viewPath.'.list', compact(['list', 'itemView']), 'sort');
+		return $this->viewWithLastSortIndex(Role::class, $viewPath.'.list', compact(['list', 'itemView']), 'sort');
     }
 	
 	
@@ -83,10 +80,8 @@ class Permissions extends Controller {
      */
     public function create(Request $request) {
 		$viewPath = $request->input('views');
-		$guard = $request->input('guard');
 		$newItemIndex = $request->input('newItemIndex');
 		if (!$viewPath) return response()->json(['no_view' => true]);
-		$this->addSettingToGlobalData('permissions_groups', 'id', 'name', 'group:'.$guard);
         return $this->view($viewPath.'.new', ['index' => $newItemIndex]);
     }
 	
@@ -115,12 +110,11 @@ class Permissions extends Controller {
      */
     public function store_show(Request $request) {
 		$viewPath = $request->input('views');
-		$guard = $request->input('guard');
 		
 		$item = $this->_storeRequest($request);
 		
 		if (!$viewPath) return response()->json(['no_view' => true]);
-		$this->addSettingToGlobalData('permissions_groups', 'id', 'name', 'group:'.$guard);
+		
 		return $this->view($viewPath.'.item', $item);
     }
 	
@@ -130,21 +124,17 @@ class Permissions extends Controller {
 		if (!$request) return false;
 		
 		$validFields = $request->validate([
-			'name'	=> 'required|string|unique:permissions,name',
-			'title'	=> 'required|string|unique:permissions,title',
+			'title'	=> 'required|string|unique:roles,title',
 			'guard'	=> 'required|string|exclude',
-			'group'	=> 'required|numeric',
 			'sort'	=> 'required|regex:/[0-9]+/'
 		]);
 		
 		$guard = $request->input('guard');
-		//$validFields['name'] = $guard.'-'.translitSlug($validFields['title']);
+		$validFields['name'] = $guard.'-'.translitSlug($validFields['title']);
 
 		$validFields['guard_name'] = $guard;
 		
-		$createdPermission = Permission::create($validFields);
-		Artisan::call('optimize:clear');
-		return $createdPermission;
+		return Role::create($validFields);
 	}
 	
 	
@@ -193,20 +183,19 @@ class Permissions extends Controller {
 			'title'	=> [
         		'string',
         		'required',
-				Rule::unique('permissions')->ignore(Permission::where('id', $id)->first()),
+				Rule::unique('roles')->ignore(Role::where('id', $id)->first()),
 			],
-			'group'	=> 'required|numeric',
 			'guard'	=> 'required|string|exclude',
 		]);
 		
 		$guard = $request->input('guard');
 		
-		//$validFields['name'] = $guard.'-'.translitSlug($validFields['title']);
+		$validFields['name'] = $guard.'-'.translitSlug($validFields['title']);
 		
 		$validFields['guard_name'] = $guard;
        
-	    $updateStat = Permission::where('id', $id)->update($validFields);
-		return response()->json($updateStat);
+	    $pdateData = Role::where('id', $id)->update($validFields);
+		return response()->json($pdateData);
     }
 	
 	
@@ -220,7 +209,7 @@ class Permissions extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(?int $id = null) {
-		$stat = Permission::destroy($id);
+		$stat = Role::destroy($id);
 		return response()->json($stat);
     }
 	
@@ -230,6 +219,30 @@ class Permissions extends Controller {
 	
 	
 	
+	/**
+	 * @param 
+	 * @return 
+	 */
+	public function permissions(Request $request) {
+		$valid = $request->validate([
+			'view'	=> 'required|string',
+			'guard'	=> 'required|string',
+			'role'	=> 'required|numeric'
+		]);
+		
+		$permissions = Permission::where('guard_name', $valid['guard'])
+			->where('group', '!=', null)
+			->orderBy('sort', 'ASC')
+			->get()
+			->groupBy('group');
+		
+		$rolePermissions = Role::where('id', $valid['role'])->first()->permissions->keyBy('id');
+		
+		$this->addSettingToGlobalData('permissions_groups', 'id', 'name');
+		
+		return $this->view($valid['view'], ['permissions' => $permissions, 'role_permissions' => $rolePermissions]);
+	}
+	
 	
 	
 	
@@ -237,83 +250,23 @@ class Permissions extends Controller {
 	 * @param 
 	 * @return 
 	 */
-	public function sections(Request $request) {
-		$viewPath = $request->input('views');
-		$guard = $request->input('guard');
+	public function permissions_save(Request $request) {
+		$valid = $request->validate([
+			'role'			=> 'required|numeric',
+			'permission'	=> 'required|numeric',
+			'stat'			=> 'required|numeric'
+		]);
 		
-		if ($guard == 'admin') {
-			$sections = AdminSection::all()
-				->sortBy('section')
-				->mapWithKeys(function ($item, $key) {
-					return [$item['section'] => $item];
-				});
-		} elseif($guard == 'site') {
-			$sections = Section::all()
-				->mapWithKeys(function ($item, $key) {
-					return [$item['section'] => $item];
-				});
+		if (!$role = Role::where('id', $valid['role'])->first()) return response()->json(false);
+		
+		if ($valid['stat']) {
+			if (!$role->hasPermissionTo($valid['permission'])) $role->givePermissionTo($valid['permission']);
+		} else {
+			if ($role->hasPermissionTo($valid['permission'])) $role->revokePermissionTo($valid['permission']);
 		}
 		
-		$perms = Permission::select('name', 'title', 'group')
-			->where('name', 'like', 'section-%')
-			->where('guard_name', $guard)
-			->get()
-			->mapWithKeys(function ($item) use($guard) {
-				return [Str::replace(['section-', ':'.$guard], '', $item['name']) => [
-					'has_permission' => true,
-					'group' => $item['group'],
-					'perm_title' => $item['title']]
-				];
-			});
-		
-		//$list = $sections->replaceRecursive($perms->toArray())->sortBy('id');
-		
-		$list = array_replace_recursive($sections->toArray(), $perms->toArray());
-		
-		$this->addSettingToGlobalData('permissions_groups', 'id', 'name', 'group:'.$guard);
-		
-		return $this->view($viewPath.'.list', compact('list', 'guard'));
+		return response()->json($valid);
 	}
-	
-	
-	
-	
-	
-	
-	/**
-	 * @param 
-	 * @return 
-	 */
-	public function section_save(Request $request) {
-		$guard = $request->input('guard');
-		$sections = $request->collect('sections')->filter(function ($value) {
-			return isset($value['group']);
-		})->map(function ($item) use($guard) {
-			$item['guard_name'] = $guard;
-			return $item;
-		});
-		
-		$ids = $sections->keys();
-			
-		Permission::upsert($sections->all(), ['name'], ['title', 'group']);
-		Artisan::call('optimize:clear');
-		return $ids;
-	}
-	
-	
-	
-	
-	
-	/**
-	 * @param 
-	 * @return 
-	 */
-	public function section_remove(Request $request) {
-		$group = $request->input('group');
-		return Permission::where(['group' => $group])->update(['group' => null]);
-	}
-	
-	
 	
 	
 	

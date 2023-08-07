@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\System\AdminController;
 use App\Http\Requests\Auth\AdminEmailVerificationRequest;
 use App\Models\System\AdminSection;
 use App\Models\System\AdminUser;

@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\crud\Admins;
-use App\Http\Controllers\crud\Permissions;
-use App\Http\Controllers\crud\Roles;
-use App\Http\Controllers\crud\Users;
-use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\TabsController;
+use App\Http\Controllers\System\Crud\Admins;
+use App\Http\Controllers\System\Crud\Permissions;
+use App\Http\Controllers\System\Crud\Roles;
+use App\Http\Controllers\System\Crud\Users;
+use App\Http\Controllers\System\SettingsController;
+use App\Http\Controllers\System\TabsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

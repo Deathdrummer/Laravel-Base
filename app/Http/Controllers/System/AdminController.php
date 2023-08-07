@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\System;
 
 use App\Http\Requests\Auth\AdminRegRequest;
 use App\Models\System\AdminUser;
