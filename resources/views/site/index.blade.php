@@ -50,17 +50,6 @@
 	
 	if (notifyReg) {
 		$.notify(notifyReg);
-		ddrPopup({
-			lhtml: 'auth.reg_success_text',
-			centerMode: true,
-			winClass: 'ddrpopup_dialog color-green'
-		}).then(({state, close}) => {
-			setTimeout(() =>{
-				if (!state.isClosed) close();
-			}, 5000);
-		}).catch(err => {
-			console.log(err);
-		});
 	}
 	
 	if (notifyResetPswd) {

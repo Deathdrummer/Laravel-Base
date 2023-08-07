@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // Получение настроек через ajax запросы
-Route::controller(SettingsController::class)->middleware(['lang', 'auth', 'isajax'])->group(function() {
+Route::controller(SettingsController::class)->middleware(['lang', 'isajax'])->group(function() {
 	Route::post('/settings', 'get');
 	Route::put('/settings', 'set');
 	Route::delete('/settings', 'remove');

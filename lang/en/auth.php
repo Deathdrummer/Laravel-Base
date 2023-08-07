@@ -48,8 +48,8 @@ return [
 
 
 	'failed'                => 'These credentials do not match our records.',
-	'reg_failed'            => 'reg failed.',
-	'reg_success'           => 'reg success.',
+	'reg_failed'            => 'Registration failed.',
+	'reg_success'           => 'Registration success.',
 	'password'              => 'The provided password is incorrect.',
 	'throttle'              => 'Too many login attempts. Please try again in :seconds seconds.',
 	'typing'                => 'Typing',

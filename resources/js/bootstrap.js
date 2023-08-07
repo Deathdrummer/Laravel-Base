@@ -95,7 +95,7 @@ window.Echo = new Echo({
 
 // глобальная обработка AJAX ответаов
 axios.interceptors.response.use(function (response) {
-	if (isJson(response.data)) response.data = JSON.parse(response.data);
+	if (response.headers['content-type'] != "application/json" && isJson(response.data)) response.data = JSON.parse(response.data);
 	return response;
 }, function (error) {
 	return Promise.reject(error);

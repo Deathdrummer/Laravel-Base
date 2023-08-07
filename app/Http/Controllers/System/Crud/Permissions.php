@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Models\System\AdminSection;
 use App\Models\System\Section;
 use App\Traits\HasCrudController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\Rule;
@@ -282,9 +283,9 @@ class Permissions extends Controller {
 	
 	/**
 	 * @param 
-	 * @return 
+	 * @return Illuminate\Http\JsonResponse
 	 */
-	public function section_save(Request $request) {
+	public function section_save(Request $request):JsonResponse {
 		$guard = $request->input('guard');
 		$sections = $request->collect('sections')->filter(function ($value) {
 			return isset($value['group']);
@@ -293,11 +294,12 @@ class Permissions extends Controller {
 			return $item;
 		});
 		
-		$ids = $sections->keys();
-			
+		$ids = $sections->keys()->toArray();
+		
 		Permission::upsert($sections->all(), ['name'], ['title', 'group']);
 		Artisan::call('optimize:clear');
-		return $ids;
+		
+		return response()->json($ids);
 	}
 	
 	

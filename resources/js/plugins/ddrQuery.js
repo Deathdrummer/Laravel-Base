@@ -22,7 +22,7 @@ function _action(method, url, data = {}, params = {}) {
 	if (_.indexOf(['get', 'head', 'options'], method) !== -1 && _hasQueryInUrl(url)) params = data;
 	
 	const config = _.assign({
-		method,
+		method: _setMethod(method),
 		url,
 		responseType: 'json', // 'arraybuffer', 'document', 'json', 'text', 'stream' 'blob' (только в браузере)
 		headers: {},
@@ -31,7 +31,10 @@ function _action(method, url, data = {}, params = {}) {
 	
 	if (_hasFiles(data)) config.headers['Content-Type'] = 'multipart/form-data';
 	
-	if (_.indexOf(['get', 'head', 'options'], method) !== -1) {
+	
+	data = _setResponseType(data, config.responseType)
+	
+	if (['get', 'head', 'options'].includes(method)) {
 		if (_hasQueryInUrl(url) == false && data) _.set(config, 'params', data);
 		_.set(config, 'params._method', method);
 	} else {
@@ -39,10 +42,7 @@ function _action(method, url, data = {}, params = {}) {
 		config['data'] = data;
 	}
 	
-	
 	if (config.abortContr) config['signal'] = config.abortContr?.signal;
-	
-	
 	
 	return new Promise(function(resolve, reject) {
 		try {
@@ -108,12 +108,27 @@ function _action(method, url, data = {}, params = {}) {
 
 
 
+function _setResponseType(data = null, responseType = null) {
+	if (_.isNull(data) || _.isNull(responseType)) throw new Error('ddrQuery -> _setResponseType: не указаны параметры!');
+	if (data instanceof FormData) data.append('_responsetype', responseType);
+	else data['_responsetype'] = responseType;
+	return data;
+}
+	
+
+
 function _setMethodField(data, method = null) {
 	if (_.isNull(method)) throw new Error('ddrQuery -> _setMethodField: не указан method!');
 	method = method.toUpperCase();
 	if (data instanceof FormData) data.append('_method', method);
 	else data['_method'] = method;
 	return data;
+}
+
+
+function _setMethod(method = null) {
+	if (_.isNull(method)) throw new Error('ddrQuery -> _setMethod: не указан method!');
+	return ['put', 'patch', 'delete', 'options'].includes(method) ? 'post' : 'get';
 }
 
 
@@ -129,12 +144,23 @@ function _hasQueryInUrl(url = null) {
 function _hasFiles(data = null) {
 	if (_.isNull(data)) return false;
 	let hasFiles = false;
-	$.each(data, function(d, r) {
-		if (r instanceof File) {
-			hasFiles = true;
-			return false;
+	
+	if (data instanceof FormData) {
+		for (let [d, r] of data.entries()) {
+			if (r instanceof File) {
+				hasFiles = true;
+				return false;
+			}
 		}
-	});
+	} else {
+		$.each(data, function(d, r) {
+			if (r instanceof File) {
+				hasFiles = true;
+				return false;
+			}
+		});
+	}
+	
 	return hasFiles;
 }
 

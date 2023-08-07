@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\System;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AdminRegRequest;
 use App\Models\System\AdminUser;
 use App\Services\System\Settings;

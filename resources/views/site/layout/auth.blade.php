@@ -30,6 +30,7 @@
 			params,
 			responseType: 'text'
 		}).then(function (response) {
+			console.log(response);
 			$('#authFormBlock').html(response.data);
 			//console.log(response);
 		});

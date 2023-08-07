@@ -58,7 +58,6 @@
 	
 	if (notifyReg) {
 		$.notify(notifyReg);
-		$.notify('{{__('auth.reg_success_text')}}');
 	}
 	
 	if (notifyResetPswd) {

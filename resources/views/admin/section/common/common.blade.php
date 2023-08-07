@@ -256,14 +256,7 @@
 
 
 
-<style>
-	img {
-  display: block;
 
-  /* This rule is very important, please don't ignore this */
-  max-width: 100%;
-}
-</style>
 
 
 

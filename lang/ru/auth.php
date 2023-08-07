@@ -37,13 +37,13 @@ return [
 	'popup_disagree_btn'    => 'Не согласен',
 	
 	'reg_success_title'		=> 'Поздравляем!',
-	'reg_success_text'		=> 'Вы успешно зарегистрировались2!',
+	'reg_success_text'		=> 'Вы успешно зарегистрировались!',
 	
 
 
 	'failed'                => 'Аккаунта с такиими учетными данными не существует!',
-	'reg_failed'            => 'reg failed.',
-	'reg_success'           => 'reg success.',
+	'reg_failed'            => 'Регистрация не удалась.',
+	'reg_success'           => 'Регистрация прошла успешно.',
 	'password'              => 'The provided password is incorrect.',
 	'throttle'              => 'Too many login attempts. Please try again in :seconds seconds.',
 	'typing'                => 'Введите',

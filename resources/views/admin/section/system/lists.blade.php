@@ -281,16 +281,7 @@
 
 <script type="module">
 	
-	
-	const {staticsCrud, eventsTypesCrud} = await loadSectionScripts({section: 'lists', guard: 'admin'});
 
-	
-	staticsCrud();
-	eventsTypesCrud();
-	
-	
-	
-	
 	
 	/*
 	$.removeCustomerAction = (tr, done) => {

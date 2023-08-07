@@ -50,6 +50,22 @@
 									setting="show_locale"
 									/>
 							</div>
+							
+							<div class="col">
+								<x-checkbox
+									label="Разрешить регистрацию на сайте"
+									group="large"
+									setting="site_reg"
+									/>
+							</div>
+							
+							<div class="col">
+								<x-checkbox
+									label="Разрешить регистрацию в админ. панели"
+									group="large"
+									setting="admin_reg"
+									/>
+							</div>
 						</div>
 					</div>
 					

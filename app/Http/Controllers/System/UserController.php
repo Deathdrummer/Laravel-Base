@@ -1,6 +1,9 @@
 <?php namespace App\Http\Controllers\System;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UserRegRequest;
 use App\Models\System\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -50,26 +53,26 @@ class UserController extends Controller {
 	 * @param 
 	 * @return 
 	 */
-	//public function regForm(Request $request) {
-	//	session(['site-auth-view' => 'site.auth.reg']);
-	//	$locale = App::currentLocale();
-	//	return view('site.auth.reg', compact(['locale']));
-	//}
+	public function regForm(Request $request) {
+		session(['site-auth-view' => 'site.auth.reg']);
+		$locale = App::currentLocale();
+		return view('site.auth.reg', compact(['locale']));
+	}
 	
 	
 	/**
 	 * @param 
 	 * @return 
 	 */
-	//public function register(RegRequest $req) {
-	//	$validFields = $req->validated();
-	//	if (!$user = User::create($validFields)) return response()->json(['reg' => __('auth.reg_failed')]);
-	//	event(new Registered($user));
-	//	Auth::guard('site')->login($user, true);
-	//	session(['site-register' => __('auth.reg_success')]);
-	//	session()->forget('site-auth-view');
-	//	return response()->json(['reg' => __('auth.reg_success')]);
-	//}
+	public function register(UserRegRequest $req) {
+		$validFields = $req->validated();
+		if (!$user = User::create($validFields)) return response()->json(['reg' => __('auth.reg_failed')]);
+		event(new Registered($user));
+		Auth::guard('site')->login($user, true);
+		session(['site-register' => __('auth.reg_success')]);
+		session()->forget('site-auth-view');
+		return response()->json(['reg' => __('auth.reg_success')]);
+	}
 	
 	
 	

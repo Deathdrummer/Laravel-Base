@@ -36,7 +36,7 @@
 	
 	
 	
-	$.permissionSectionReset = (btn, guard = null) => {
+	$.permissionSectionReset = async (btn, guard = null) => {
 		if (!guard) return false;
 		let permissionsCardWait = $('#permissionsCard').ddrWait({
 			iconHeight: '50px',
@@ -46,17 +46,17 @@
 		
 		let formData = new FormData(document.getElementById('permissionsSectionsForm'));
 		formData.append('guard', guard);
-		axiosQuery('put', 'system/permissions/sections', formData, 'json').then(({data, error, status, headers}) => {
-			$('#refreshSectionsPermissions').ddrInputs('disable');
-			
-			$.each(data, (k, index) => {
-				$('#permissionsSectionsList').find('[index="'+index+'"]').html('<i class="fa-solid fa-check color-green fz20px"></i>');
-			});	
-			
-			permissionsCardWait.destroy();
-			$('#permissionsSectionsBlock').ddrInputs('state', 'clear');
-		});
 		
+		const {data, error, status, headers} = await ddrQuery.put('system/permissions/sections', formData, {responseType: 'json'});
+		
+		$('#refreshSectionsPermissions').ddrInputs('disable');
+		
+		$.each(data, (k, index) => {
+			$('#permissionsSectionsList').find('[index="'+index+'"]').html('<i class="fa-solid fa-check color-green fz20px"></i>');
+		});	
+		
+		permissionsCardWait.destroy();
+		$('#permissionsSectionsBlock').ddrInputs('state', 'clear');
 	}
 
 	/*$.permissionsSectionSetGroup = (select, id, permission, title) => {

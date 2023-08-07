@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\System\Settings;
 use Illuminate\Support\Str;
 use Symfony\Component\Mime\Encoder\IdnAddressEncoder;
 
@@ -336,6 +337,30 @@ if (! function_exists('dateFormatter')) {
 
 
 
+
+
+
+//------------------------------------------------------------
+
+if (! function_exists('setting')) {
+	/**
+	 * Проверка указанной настройки
+	 * @param string|null  $setting
+	 * @param bool|null  $expectedValue
+	 * @param bool  $strict
+	 * @return bool
+	*/
+	function setting(?string $setting = null, ?bool $expectedValue = null, bool $strict = false): bool {
+		$settingsService = app()->make(Settings::class);
+		$settingVal = $settingsService->get($setting);
+		
+		if ($expectedValue) {
+			return $strict ? $settingVal === $expectedValue : $settingVal == $expectedValue;
+		}
+		
+		return !!$settingVal;
+	}
+}
 
 
 

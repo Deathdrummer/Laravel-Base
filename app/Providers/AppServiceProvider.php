@@ -110,6 +110,26 @@ class AppServiceProvider extends ServiceProvider {
 		
 		
 		
+		/**
+		* Проверка указанной настройки
+		* @param string|null  $setting
+		* @param bool|null  $expectedValue
+		* @param bool  $strict
+		* @return bool
+		*/
+		Blade::if('setting', function ($setting = null, $expectedValue = null, $strict = false):bool {
+			$settingsService = app()->make(SettingsService::class);
+			$settingVal = $settingsService->get($setting);
+			
+			if ($expectedValue) {
+				return $strict ? $settingVal === $expectedValue : $settingVal == $expectedValue;
+			}
+			
+			return !!$settingVal;
+		});
+		
+		
+		
 		
 		
 		

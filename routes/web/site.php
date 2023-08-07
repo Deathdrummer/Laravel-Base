@@ -27,8 +27,8 @@ use Illuminate\Support\Str;
 
 // регистрация, авторизация, выход
 Route::controller(UserController::class)->middleware(['lang', 'isajax'])->group(function() {
-	//Route::get('/reg', 'regForm')->name('site.reg');
-	//Route::post('/register', 'register');
+	Route::get('/reg', 'regForm')->name('site.reg');
+	Route::post('/register', 'register');
 	Route::get('/auth', 'authForm')->name('site.auth');
 	Route::post('/login', 'login');
 	Route::get('/logout', 'logout')->name('site.logout');

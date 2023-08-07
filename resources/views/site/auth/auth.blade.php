@@ -32,5 +32,7 @@
 
 <div class="row justify-content-between mt30px">
 	<div class="col-auto"><p class="auth__textlink auth__forgot" gotoauthform="forgot-password">{{__('auth.forgot_pass')}}</p></div>
-	{{-- <div class="col-auto"><p class="auth__textlink auth__reg" gotoauthform="reg">{{__('auth.reg')}}</p></div> --}}
+	@setting('site_reg')
+		<div class="col-auto"><p class="auth__textlink auth__reg" gotoauthform="reg">{{__('auth.reg')}}</p></div>
+	@endsetting
 </div>
