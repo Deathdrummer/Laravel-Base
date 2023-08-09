@@ -33,11 +33,6 @@ export async function adminSectionsCrud() {
 		changeInputs({'[save], [update]': 'enable'});
 		
 		
-		
-		//$('#contractAddBtn').ddrInputs('enable');
-		
-		
-		
 		$.timesheetPeriodsWinBuild = (btn, periodId) => {
 			$('#lastTimesheetPeriodsBlock').find('li').removeClass('active');
 			$('#newTimesheetEventBtn, #importTimesheetEventsBtn, #exportOrdersBtn').setAttrib('hidden');
