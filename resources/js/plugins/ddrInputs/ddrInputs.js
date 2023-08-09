@@ -1,9 +1,11 @@
 export default class DdrInputs {
 	
 	inputs = [];
+	block = null;
 	
 	constructor(items, method) {
 		if (!items) return false;
+		
 		
 		// Методы, которые могут применяться для блока - обертки, в котором находятся инпуты
 		const blockMethods = ['change', 'state', 'enable', 'disable', 'addClass', 'removeClass'];
@@ -13,6 +15,7 @@ export default class DdrInputs {
 				&& !(['input', 'select', 'textarea', 'button'].includes(getTagName(items[0])) 
 				&& !$(items[0]).hasAttr('contenteditable')
 				&& !$(items[0]).hasAttr('datepicker'))) {
+					this.block = items;
 					items = items.find('input, select, textarea, button, [contenteditable], [datepicker]');
 				}
 		}
@@ -387,8 +390,29 @@ export default class DdrInputs {
 	
 	
 	
-	disable() {
+	disable(itemsTypes = null) {
 		if (!this.inputs) return false;
+		
+		const block = this.block;
+		const filteredItems = [];
+		
+		if (itemsTypes && !_.isString(itemsTypes[0])) {
+			this.inputs = itemsTypes;
+		} else if (block) {
+			if (itemsTypes == 'buttons' || itemsTypes.includes('buttons')) filteredItems.push(...this.inputs.filter(item => ['button'].includes(item.tag)));
+			if (itemsTypes == 'inputs' || itemsTypes.includes('inputs')) filteredItems.push(...this.inputs.filter(item => !['button'].includes(item.tag)));
+			
+			if (!_.isString(itemsTypes)) {
+				_.pull(itemsTypes, 'buttons', 'inputs');
+				
+				for (let fitem of itemsTypes) {
+					let blockSelector = block[0].querySelector(fitem);
+					filteredItems.push(...this.inputs.filter(({item}) => blockSelector == item));
+				}
+			}
+			
+			this.inputs = filteredItems;
+		}
 		
 		this.inputs.forEach(({item, tag, type, group, wrapperClass, wrapperSelector}) => {
 			if (wrapperSelector) {
@@ -406,13 +430,36 @@ export default class DdrInputs {
 				}
 			}
 		});	
+		
+		return filteredItems;
 	}
 	
 	
 	
 	
-	enable() {
+	enable(itemsTypes = null) {
 		if (!this.inputs) return false;
+		
+		const block = this.block;
+		const filteredItems = [];
+		
+		if (itemsTypes && !_.isString(itemsTypes[0])) {
+			this.inputs = itemsTypes;
+		} else if (block) {
+			if (itemsTypes == 'buttons' || itemsTypes.includes('buttons')) filteredItems.push(...this.inputs.filter(item => ['button'].includes(item.tag)));
+			if (itemsTypes == 'inputs' || itemsTypes.includes('inputs')) filteredItems.push(...this.inputs.filter(item => !['button'].includes(item.tag)));
+			
+			if (!_.isString(itemsTypes)) {
+				_.pull(itemsTypes, 'buttons', 'inputs');
+				
+				for (let fitem of itemsTypes) {
+					let blockSelector = block[0].querySelector(fitem);
+					filteredItems.push(...this.inputs.filter(({item}) => blockSelector == item));
+				}
+			}
+			
+			this.inputs = filteredItems;
+		}
 		
 		this.inputs.forEach(({item, tag, type, group, wrapperClass, wrapperSelector}) => {
 			if (wrapperSelector) {
@@ -424,6 +471,8 @@ export default class DdrInputs {
 				}
 			}
 		});	
+		
+		return filteredItems;
 	}
 	
 	

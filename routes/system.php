@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\System\Crud\Admins;
+use App\Http\Controllers\System\Crud\AdminSections;
 use App\Http\Controllers\System\Crud\Permissions;
 use App\Http\Controllers\System\Crud\Roles;
+use App\Http\Controllers\System\Crud\SiteSections;
 use App\Http\Controllers\System\Crud\Users;
 use App\Http\Controllers\System\SettingsController;
 use App\Http\Controllers\System\TabsController;
@@ -137,3 +139,17 @@ Route::put('/permissions/sections', [Permissions::class, 'section_save']);
 Route::delete('/permissions/sections', [Permissions::class, 'section_remove']);
 Route::post('/permissions/store_show', [Permissions::class, 'store_show']);
 Route::resource('permissions', Permissions::class);
+
+
+
+// Разделы админ. панели
+Route::post('/admin_sections/store_show', [AdminSections::class, 'store_show']);
+Route::post('/admin_sections/create_files', [AdminSections::class, 'create_files']);
+Route::resource('admin_sections', AdminSections::class);
+
+
+
+// Разделы клиентской части
+Route::post('site_sections/store_show', [SiteSections::class, 'store_show']);
+Route::post('/site_sections/create_files', [SiteSections::class, 'create_files']);
+Route::resource('site_sections', SiteSections::class);

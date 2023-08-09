@@ -66,6 +66,35 @@ class BlockTable {
 	}
 	
 	
+	
+	
+	/*
+	 * 	Скроллить scrolled таблицу 
+	 *		- положение для скролла px по-умолчанию в самый низ	
+	 *		- скорость анимации прокрутки
+	 */
+	scroll(selector, scrollTo = null, scrollSpeed = 200) {
+		const s = this.#getBodySelector(selector);
+		if ($(selector).length == 0) {
+			throw new Error('BlockTable scroll нет селектора!');
+			return;
+		}
+		
+		const tBodyHeight = !_.isNull(scrollTo) ? scrollTo : $(s)[0].scrollHeight;
+		
+		$(s).animate({scrollTop: tBodyHeight}, scrollSpeed);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/*
 		Синхронизация скролла нескольких таблиц
 			- селектор (должен быть только атрибут)
@@ -199,4 +228,15 @@ class BlockTable {
 		if (!selector) return false;
 		$(selector).find('[ddrtablebody]').empty();
 	}
+	
+	
+	
+	
+	
+	
+	#getBodySelector(selector) {
+		return $(selector).hasAttr('ddrtablebody') ? selector : $(selector).find('[ddrtablebody]');
+	}
+	
+	
 }

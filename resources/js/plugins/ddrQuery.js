@@ -128,7 +128,7 @@ function _setMethodField(data, method = null) {
 
 function _setMethod(method = null) {
 	if (_.isNull(method)) throw new Error('ddrQuery -> _setMethod: не указан method!');
-	return ['put', 'patch', 'delete', 'options'].includes(method) ? 'post' : 'get';
+	return ['post', 'put', 'patch', 'delete'].includes(method) ? 'post' : 'get';
 }
 
 

@@ -8,7 +8,7 @@
 			<div class="ddrtabs">
 				<div class="ddrtabs__nav">
 					<ul class="ddrtabsnav" ddrtabsnav>
-						<li class="ddrtabsnav__item ddrtabsnav__item_active" ddrtabsitem="sectionsTab1">Заказы</li>
+						<li class="ddrtabsnav__item ddrtabsnav__item_active" ddrtabsitem="sectionsTab1">Раздел 1</li>
 					</ul>
 				</div>
 				
@@ -17,7 +17,8 @@
 					<div class="ddrtabscontent__item ddrtabscontent__item_visible" ddrtabscontentitem="sectionsTab1">
 						<div class="row row-cols-1 gy-20">
 							<div class="col">
-								<p class="mb1rem">Количество записей на одной странице списка заказов</p>
+								<p class="color-gray-300">Тут разместить настройки</p>
+								{{-- <p class="mb1rem">Количество записей на одной странице списка заказов</p>
 								<x-input
 									type="number"
 									class="w7rem"
@@ -27,7 +28,7 @@
 									max="50"
 									showrows
 									setting="orders.per_page"
-								/>
+								/> --}}
 							</div>
 						</div>
 					</div>

@@ -145,7 +145,7 @@ Route::middleware(['lang'])->get('/{section?}', function (Request $request, $sec
 
 
 // Получить данные раздела админки
-Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', function (Request $request, Settings $settings) {
+Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', function (Request $request/* , Settings $settings */) {
 	$section = $request->input('section');
 	$pageTitle = [];
 	

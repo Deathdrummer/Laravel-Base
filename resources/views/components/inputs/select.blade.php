@@ -56,7 +56,7 @@ choose-empty - разрешить выбирать пункт [не выбран
 		@if(isset($actionFunc) && !$setting)oninput="$.{{$actionFunc}}(this{{isset($actionParams) ? ', '.$actionParams : null}})" @endif
 		@if($tag) {!!$tag!!} @endif
 		>
-		@if ($options && $choose && ($emptyHasValue || (!$hasActive && $value !== null && !$setSelected($value, $settings, $setting))))
+		@if ($options && $choose && ($emptyHasValue || (!$hasActive && $chooseEmpty && $value !== null && !$setSelected($value, $settings, $setting))))
 			<option value=""{{!$hasActive ? 'selected' : ''}} {{$chooseEmpty ? '' : 'disabled'}}>{{$choose}}</option>
 		@endif
 		@forelse ($options as $item)

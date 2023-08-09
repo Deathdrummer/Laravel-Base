@@ -51,6 +51,6 @@ $.fn.ddrInputs = function(method = false, ...params) {
 		
 		if (method.includes(':')) method = method.replace(':', '_');
 		
-		methods[method](...params);
+		return methods[method](...params);
 	}
 }

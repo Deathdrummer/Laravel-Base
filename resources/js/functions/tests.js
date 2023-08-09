@@ -29,10 +29,10 @@ window.isNull = function(str) {
 	Является ли строка json
 	- строка
 */
-window.isJson = function(str) {
-	if (str == undefined || typeof str == 'undefined') return false;
+window.isJson = function(str = null) {
+	if (_.isNull(str) || typeof str == 'undefined') return false;
 	try {
-		JSON.parse(str);
+		return !!JSON.parse(str);
 	} catch (e) {
 		return false;
 	}

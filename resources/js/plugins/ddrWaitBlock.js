@@ -78,8 +78,8 @@ $.fn.ddrWait = function(params = null) {
 	});
 	
 	return {
-		off() {
-			if (isBtn) $(block).ddrInputs('enable');
+		off(enable = true) {
+			if (isBtn && enable) $(block).ddrInputs('enable');
 			$(block).removeClass(ddrwaitwrapper);
 			$(block).find('#'+ddrwBId).setAttrib('hidden');
 		},
@@ -88,8 +88,8 @@ $.fn.ddrWait = function(params = null) {
 			$(block).addClass(ddrwaitwrapper);
 			$(block).find('#'+ddrwBId).removeAttrib('hidden');
 		},
-		destroy() {
-			if (isBtn) $(block).ddrInputs('enable');
+		destroy(enable = true) {
+			if (isBtn && enable) $(block).ddrInputs('enable');
 			$(block).removeClass(ddrwaitwrapper);
 			$(block).find('#'+ddrwBId).remove();
 			//$(block).find('.'+ddrwaitwrapper+', .'+ddrwaitBlock+', .'+ddrwaitContent+', .'+ddrwaitIcon+', .'+ddrwaitText).removeClass('s_*');

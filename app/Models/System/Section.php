@@ -35,7 +35,10 @@ class Section extends Model {
 		'page_title',
 		'title',
 		'visible',
-		'nav'
+		'nav',
+		'created_files',
+		'sort',
+		'_sort',
 	];
 	
 	
@@ -61,17 +64,34 @@ class Section extends Model {
 	 * @param string  $value
 	 * @return 
 	 */
-	//public function setTitleAttribute($value) {
-	//	$this->attributes['title'] = is_array($value) ? json_encode($value) : $value;
-	//}
+	public function setTitleAttribute($value) {
+		$lang = App::currentLocale();
+		$title = $this->attributes['title'] ?? [];
+		data_set($title, $lang, $value);
+		$this->attributes['title'] = is_array($title) ? json_encode($title) : $title;
+	}
 	
 	/**
 	 * @param string  $value
 	 * @return 
 	 */
-	//public function setPageTitleAttribute($value) {
-	//	$this->attributes['page_title'] = is_array($value) ? json_encode($value) : $value;
-	//}
+	public function setPageTitleAttribute($value) {
+		$lang = App::currentLocale();
+		$pageTitle = $this->attributes['page_title'] ?? [];
+		data_set($pageTitle, $lang, $value);
+		$this->attributes['page_title'] = is_array($pageTitle) ? json_encode($pageTitle) : $pageTitle;
+	}
+	
+	
+	/**
+     * 
+     *
+     * @param string  $value
+     * @return string
+     */
+    public function setParentIdAttribute($value = null) {
+		$this->attributes['parent_id'] = is_null($value) ? 0 : $value;
+	}
 	
 	
 	

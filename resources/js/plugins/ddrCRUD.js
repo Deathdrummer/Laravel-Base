@@ -2,6 +2,7 @@ $.ddrCRUD = function(settings = false) {
 	// viewsPath, list, changeInputs, create, store, storeWithShow, edit, update, destroy, query, getParams, abort, remove
 	let {
 			container, //
+			waitParams, 
 			itemToIndex, //
 			route, //
 			params,
@@ -13,6 +14,10 @@ $.ddrCRUD = function(settings = false) {
 			sortField
 		} = _.assign({
 			container: null,
+			waitParams: {
+				iconHeight: '30px',
+				iconColor: 'hue-rotate(106deg)',
+			},
 			itemToIndex: null,
 			route: null,
 			params: null,
@@ -322,10 +327,7 @@ $.ddrCRUD = function(settings = false) {
 		
 		let initWait;
 		if (withoutWait) {
-			initWait = $(container).ddrWait({
-				iconHeight: ($(container).height() - 6)+'px',
-				iconColor: 'hue-rotate(106deg)',
-			});
+			initWait = $(container).ddrWait(waitParams);
 		}
 		
 		abortCtrl = new AbortController();

@@ -152,7 +152,7 @@ class Users extends Controller {
 		
 		$role = $request->input('role');
 		
-		if (!$user = SystemUser::create($validFields)) return response()->json(false);
+		if (!$user = User::create($validFields)) return response()->json(false);
 		$user->forceFill(['temporary_password' => Crypt::encryptString(Str::random(12))])->save();
 		
 		if ($role) $user->assignRole($role);

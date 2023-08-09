@@ -22,6 +22,9 @@ import '@plugins/blockTable';
 
 
 
+
+
+
 $.notify.defaults({
 	clickToHide: true,
 	autoHide: true,
@@ -29,16 +32,19 @@ $.notify.defaults({
 	arrowShow: true,
 	arrowSize: 5,
 	//position: '...',
-	elementPosition: 'bottom left',
-	globalPosition: 'bottom right',
+	//elementPosition: 'bottom left',
+	//globalPosition: 'bottom right',
+	//elementPosition: 'top right',
+  	globalPosition: 'bottom right',
 	style: 'bootstrap',
 	className: 'success',
 	showAnimation: 'fadeIn',
 	showDuration: 200,
 	hideAnimation: 'fadeOut',
-	hideDuration: 3000,
+	hideDuration: 100,
 	gap: 2
 });
+
 
 
 // Configure time between final scroll event and

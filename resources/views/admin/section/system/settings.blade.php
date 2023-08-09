@@ -9,7 +9,6 @@
 					<ul class="ddrtabsnav" ddrtabsnav>
 						<li class="ddrtabsnav__item ddrtabsnav__item_active" ddrtabsitem="systemTab1">Общие настройки</li>
 						<li class="ddrtabsnav__item" ddrtabsitem="systemTab2">Заголовки и названия</li>
-						<li class="ddrtabsnav__item" ddrtabsitem="systemTab3">Настройки отображения элементов</li>
 					</ul>
 				</div>
 				
@@ -79,68 +78,6 @@
 									/>
 							</div>
 						</div>
-					</div>
-					
-					
-					<div class="ddrtabscontent__item" ddrtabscontentitem="systemTab3">
-						
-						<div class="row row-cols-3 gx-15">
-							<div class="col">
-								<p class="mb2rem fz16px">Варинты отображения статусов заказа в тултипе:</p>
-								<div class="row row-cols-1 gy-10">
-									<div class="col">
-										<x-radio
-											label="Цветной круг"
-											setting="order_statuses_showtype"
-											group="large"
-											value="color"
-											/>
-									</div>
-									<div class="col">
-										<x-radio
-											label="Цветная иконка"
-											setting="order_statuses_showtype"
-											group="large"
-											value="icon"
-											/>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<p class="mb2rem fz16px">Варинты отображения статусов заказа в списке заказов:</p>
-								<div class="row row-cols-1 gy-10">
-									<div class="col">
-										<x-checkbox
-											label="Цветной круг"
-											setting="order_statuses_showtype_list.color"
-											group="large"
-											value="color"
-											/>
-									</div>
-									<div class="col">
-										<x-checkbox
-											label="Цветная иконка"
-											setting="order_statuses_showtype_list.icon"
-											group="large"
-											value="icon"
-											/>
-									</div>
-									<div class="col">
-										<x-checkbox
-											label="Текст"
-											setting="order_statuses_showtype_list.text"
-											group="large"
-											value="text"
-											/>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								
-							</div>
-						</div>
-						
-								
 					</div>
 				</div>
 				{{--  --}}

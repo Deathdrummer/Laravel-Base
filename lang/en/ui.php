@@ -13,6 +13,7 @@ return [
 	'done' 					=> 'Done',
 	'apply' 				=> 'Apply',
 	'add' 					=> 'Add',
+	'create' 				=> 'Create',
 	'save' 					=> 'Save',
 	'delete' 				=> 'Delete',
 	'cancel' 				=> 'Cancel',
