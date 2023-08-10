@@ -63,7 +63,7 @@ class SiteSections extends Controller {
 		$viewPath = $validData['views'];
 		if (!$viewPath) return response()->json(['no_view' => true]);
         
-		$list = Section::whereNot('section', 'site_sections')->orderBy('_sort', 'ASC')->get();
+		$list = Section::orderBy('_sort', 'ASC')->get();
 		
 		$listToSelect = $list->where('parent_id', 0)->pluck('title', 'id');
 		$listToSelect->prepend('Нет', 0);
@@ -154,7 +154,7 @@ class SiteSections extends Controller {
 		
 		$listToSelect->prepend('Нет', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
-		
+		logger($res);
 		return $res;
 	}
 	

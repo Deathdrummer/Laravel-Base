@@ -14,6 +14,7 @@
 				name="parent_id"
 				size="small"
 				class="w100"
+				options-type="assoc"
 				:options="$data['parentItems']"
 				/>
 		</x-table.td>

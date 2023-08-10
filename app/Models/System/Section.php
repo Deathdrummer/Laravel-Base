@@ -34,6 +34,7 @@ class Section extends Model {
 		'section',
 		'page_title',
 		'title',
+		'parent_id',
 		'visible',
 		'nav',
 		'created_files',
@@ -154,7 +155,7 @@ class Section extends Model {
 		$navData = collect([]);
 		$sections = $this->select('id', 'section', 'title', 'parent_id', 'nav')
 						->where('visible', 1)
-						->orderBy('_sort', 'ASC')
+						->orderBy('sort', 'ASC')
 						->get()
 						->filter(function ($item) {
 							if (auth('site')->check() && auth('site')->user()->is_main_admin) return true;

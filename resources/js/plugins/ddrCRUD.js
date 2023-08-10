@@ -143,7 +143,8 @@ $.ddrCRUD = function(settings = false) {
 			abortCtrl = new AbortController();
 			axiosQuery('get', _route('create'), params, 'text', abortCtrl).then(({data, error, status, headers}) => {
 				if (!error) newItemIndex++;
-				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers});
+				const payload = headers['payload'] ? JSON.parse(headers['payload']) : null;
+				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers, payload});
 			}).catch((e) => {
 				if (cb && typeof cb == 'function') cb(false, e);
 			});
@@ -169,7 +170,8 @@ $.ddrCRUD = function(settings = false) {
 			
 			abortCtrl = new AbortController();
 			axiosQuery('post', route, form, 'text', abortCtrl).then(({data, error, status, headers}) => {
-				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers});
+				const payload = headers['payload'] ? JSON.parse(headers['payload']) : null;
+				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers, payload});
 			}).catch((e) => {
 				if (cb && typeof cb == 'function') cb(false, e);
 			});
@@ -187,7 +189,8 @@ $.ddrCRUD = function(settings = false) {
 			
 			abortCtrl = new AbortController();
 			axiosQuery('get', _route(id), params, 'text', abortCtrl).then(({data, error, status, headers}) => {
-				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers});
+				const payload = headers['payload'] ? JSON.parse(headers['payload']) : null;
+				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers, payload});
 			}).catch((e) => {
 				if (cb && typeof cb == 'function') cb(false, e);
 			});
@@ -199,7 +202,8 @@ $.ddrCRUD = function(settings = false) {
 			
 			abortCtrl = new AbortController();
 			axiosQuery('get', _route(id, 'edit'), params, 'text', abortCtrl).then(({data, error, status, headers}) => {
-				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers});
+				const payload = headers['payload'] ? JSON.parse(headers['payload']) : null;
+				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers, payload});
 			}).catch((e) => {
 				if (cb && typeof cb == 'function') cb(false, e);
 			});
@@ -216,7 +220,8 @@ $.ddrCRUD = function(settings = false) {
 			
 			abortCtrl = new AbortController();
 			axiosQuery('put', _route(id), form, 'text', abortCtrl).then(({data, error, status, headers}) => {
-				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers});
+				const payload = headers['payload'] ? JSON.parse(headers['payload']) : null;
+				if (cb && typeof cb == 'function') cb(data, container, {error, status, headers, payload});
 			}).catch((e) => {
 				if (cb && typeof cb == 'function') cb(false, e);
 			});

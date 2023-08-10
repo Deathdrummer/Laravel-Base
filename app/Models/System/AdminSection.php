@@ -134,7 +134,7 @@ class AdminSection extends Model {
 		$navData = collect([]);
 		$sections = $this->select('id', 'section', 'title', 'parent_id', 'nav')
 						->where('visible', 1)
-						->orderBy('_sort', 'ASC')
+						->orderBy('sort', 'ASC')
 						->get()
 						->filter(function ($item) {
 							if (auth('admin')->check() && auth('admin')->user()->is_main_admin) return true;

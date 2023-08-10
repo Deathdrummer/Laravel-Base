@@ -13,6 +13,7 @@
 	'size'			=> $groupWrap,
 	'label' 		=> null,
     'action'        => 'setSetting',
+    'exclude'		=> [],
 ])
 
 @php
@@ -60,6 +61,9 @@ choose-empty - разрешить выбирать пункт [не выбран
 			<option value=""{{!$hasActive ? 'selected' : ''}} {{$chooseEmpty ? '' : 'disabled'}}>{{$choose}}</option>
 		@endif
 		@forelse ($options as $item)
+			@if(in_array($item['value'], $exclude))
+				@continue;
+			@endif
 			<option
 				value="{{$item['value'] ?? $item['title']}}"
 				@selected($item['active'] ?? (($item['value'] ?? $item['title']) == $setSelected($value, $settings, $setting)))

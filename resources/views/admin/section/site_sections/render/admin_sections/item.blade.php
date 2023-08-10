@@ -15,6 +15,8 @@
 			class="w100"
 			:options="$data['parentItems']"
 			value="{{$parent_id}}"
+			options-type="assoc"
+			:exclude="[$id]"
 			/>
 	</x-table.td>
 	<x-table.td class="h-center">

@@ -33,11 +33,6 @@ export async function siteSectionsCrud() {
 		changeInputs({'[save], [update]': 'enable'});
 		
 		
-		
-		//$('#contractAddBtn').ddrInputs('enable');
-		
-		
-		
 		$.timesheetPeriodsWinBuild = (btn, periodId) => {
 			$('#lastTimesheetPeriodsBlock').find('li').removeClass('active');
 			$('#newTimesheetEventBtn, #importTimesheetEventsBtn, #exportOrdersBtn').setAttrib('hidden');
@@ -84,7 +79,9 @@ export async function siteSectionsCrud() {
 				bgColor: '#ffffffd6'
 			});
 			
-			storeWithShow(row, (data, container, {error}) => {
+			storeWithShow(row, (data, container, {error, payload}) => {
+				
+				
 				if (error) {
 					siteSectionSaveWait.destroy();
 					$(row).ddrInputs('state', 'clear');
@@ -101,6 +98,11 @@ export async function siteSectionsCrud() {
 					$(row).replaceWith(data);
 					$.notify('Запись успешно сохранена!');
 					$('#siteSectionsTable').blockTable('buildTable');
+					
+					const {id, title} = payload;
+					$('#adminSectionsTable').find('[name="parent_id"]').each((k, item) => {
+						$(item).children().last().after(`<option value="${id}">${title}</option>`);
+					});
 				}
 			});
 		}

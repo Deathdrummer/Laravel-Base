@@ -15,6 +15,8 @@
 			class="w100"
 			:options="$data['parentItems']"
 			value="{{$parent_id}}"
+			options-type="assoc"
+			:exclude="[$id]"
 			/>
 	</x-table.td>
 	<x-table.td class="h-center">
@@ -36,8 +38,8 @@
 		<x-buttons-group group="small" w="3rem" gx="5">
 			<x-button
 				variant="purple"
-				action="adminSectionsCreateFiles:{{$id ?? null}},{{$section}},{{$title}}"
-				tag="adminsectionscreatefilesbtn"
+				action="siteSectionsCreateFiles:{{$id ?? null}},{{$section}},{{$title}}"
+				tag="sitesectionscreatefilesbtn"
 				title="Создать структуру файлов"
 				disabled="{{isset($created_files) && $created_files}}"
 				>
@@ -45,7 +47,7 @@
 			</x-button>
 			<x-button
 				variant="blue"
-				action="adminSectionsUpdate:{{$id ?? null}}"
+				action="siteSectionsUpdate:{{$id ?? null}}"
 				title="Сохранить"
 				disabled
 				update
@@ -54,7 +56,7 @@
 			</x-button>
 			<x-button
 				variant="red"
-				action="adminSectionsRemove:{{$id ?? null}}"
+				action="siteSectionsRemove:{{$id ?? null}}"
 				title="Удалить"
 				remove
 				>

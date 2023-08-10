@@ -79,7 +79,7 @@ export async function adminSectionsCrud() {
 				bgColor: '#ffffffd6'
 			});
 			
-			storeWithShow(row, (data, container, {error}) => {
+			storeWithShow(row, (data, container, {error, headers, payload}) => {
 				if (error) {
 					adminSectionSaveWait.destroy();
 					$(row).ddrInputs('state', 'clear');
@@ -96,6 +96,11 @@ export async function adminSectionsCrud() {
 					$(row).replaceWith(data);
 					$.notify('Запись успешно сохранена!');
 					$('#adminSectionsTable').blockTable('buildTable');
+					
+					const {id, title} = payload;
+					$('#adminSectionsTable').find('[name="parent_id"]').each((k, item) => {
+						$(item).children().last().after(`<option value="${id}">${title}</option>`);
+					});
 				}
 			});
 		}

@@ -14,6 +14,7 @@
 				name="parent_id"
 				size="small"
 				class="w100"
+				options-type="assoc"
 				:options="$data['parentItems']"
 				/>
 		</x-table.td>
@@ -31,14 +32,14 @@
 			<x-buttons-group group="small" w="3rem" gx="5">
 				<x-button
 					variant="blue"
-					action="adminSectionsSave"
+					action="siteSectionsSave"
 					title="Сохранить"
 					disabled
 					save
 					><i class="fa-solid fa-fw fa-floppy-disk"></i></x-button>
 				<x-button
 					variant="red"
-					action="adminSectionsRemove"
+					action="siteSectionsRemove"
 					title="Удалить"
 					remove
 					><i class="fa-solid fa-fw fa-trash-can"></i></x-button>

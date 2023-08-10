@@ -19,7 +19,7 @@
 					<x-table class="w100" noborder id="adminSectionsTable" scrolled="calc(100vh - 216px)">
 						<x-table.head>
 							<x-table.tr class="h5rem">
-								<x-table.td class="w20rem" noborder><strong>Имя файла</strong></x-table.td>
+								<x-table.td class="w20rem" noborder><strong>Имя файла (URL)</strong></x-table.td>
 								<x-table.td class="w25rem" noborder><strong>Название раздела (в меню)</strong></x-table.td>
 								<x-table.td class="w-auto" noborder><strong>Заголовок на странице</strong></x-table.td>
 								<x-table.td class="w25rem" noborder><strong>Родительский раздел</strong></x-table.td>
@@ -42,7 +42,7 @@
 					<x-table class="w100" noborder id="siteSectionsTable" scrolled="calc(100vh - 216px)">
 						<x-table.head>
 							<x-table.tr class="h5rem">
-								<x-table.td class="w20rem" noborder><strong>Имя файла</strong></x-table.td>
+								<x-table.td class="w20rem" noborder><strong>Имя файла (URL)</strong></x-table.td>
 								<x-table.td class="w25rem" noborder><strong>Название раздела (в меню)</strong></x-table.td>
 								<x-table.td class="w-auto" noborder><strong>Заголовок на странице</strong></x-table.td>
 								<x-table.td class="w25rem" noborder><strong>Родительский раздел</strong></x-table.td>
@@ -88,7 +88,6 @@
 		
 		if (type == 'admin') adminSectionsCrud();
 		if (type == 'site') siteSectionsCrud();
-		
 	}
 	
 	
