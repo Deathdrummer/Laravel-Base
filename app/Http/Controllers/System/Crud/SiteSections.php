@@ -228,7 +228,6 @@ class SiteSections extends Controller {
 	
 	
 	
-	
     /**
      * Удаление записи
      *
