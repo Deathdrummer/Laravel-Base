@@ -26,7 +26,7 @@
 		</x-table.td>
 		<x-table.td></x-table.td>
 		<x-table.td>
-			<x-input type="number" showrows name="sort" size="small" />
+			<x-input type="number" showrows name="sort" size="small" value="0" />
 		</x-table.td>
 		<x-table.td class="h-end pr9px">
 			<x-buttons-group group="small" w="3rem" gx="5">

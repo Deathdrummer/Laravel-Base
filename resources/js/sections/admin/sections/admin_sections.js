@@ -27,7 +27,7 @@ export async function adminSectionsCrud() {
 			return false;
 		}
 		
-		$('#adminSectionsTable').blockTable('buildTable');
+		//$('#adminSectionsTable').blockTable('buildTable');
 		//wait(false);
 		//enableButtons(true);
 		changeInputs({'[save], [update]': 'enable'});
@@ -66,7 +66,7 @@ export async function adminSectionsCrud() {
 				if (data) $(container).append(data);
 				if (error) $.notify(error.message, 'error');
 				$('#adminSectionsTable').blockTable('scroll');
-				$('#adminSectionsTable').blockTable('buildTable');
+				//$('#adminSectionsTable').blockTable('buildTable');
 			});
 		}
 		
@@ -95,7 +95,7 @@ export async function adminSectionsCrud() {
 				if (data) {
 					$(row).replaceWith(data);
 					$.notify('Запись успешно сохранена!');
-					$('#adminSectionsTable').blockTable('buildTable');
+					//$('#adminSectionsTable').blockTable('buildTable');
 					
 					const {id, title} = payload;
 					$('#adminSectionsTable').find('[name="parent_id"]').each((k, item) => {
@@ -180,6 +180,10 @@ export async function adminSectionsCrud() {
 						} 
 						wait(false);
 						removeAdminSectionWait.destroy();
+						
+						$('#adminSectionsTable').find('[name="parent_id"]').each((k, item) => {
+							$(item).children(`[value="${id}"]`).remove();
+						});
 					});
 					
 				}

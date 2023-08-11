@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-
+use Spatie\Permission\Models\Permission;
 
 class SiteSections extends Controller {
 	use HasCrudController;
@@ -236,7 +236,10 @@ class SiteSections extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(?int $id = null) {
-		$stat = Section::destroy($id);
+		$section = Section::find($id);
+		$sectionName = $section->section;
+		$stat = $section->destroy($id);
+		if ($stat) Permission::where('name', "section-{$sectionName}:site")->delete();
 		return response()->json($stat);
     }
 	

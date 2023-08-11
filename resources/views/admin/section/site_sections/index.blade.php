@@ -8,8 +8,16 @@
 		<div class="ddrtabs">
 			<div class="ddrtabs__nav">
 				<ul class="ddrtabsnav" ddrtabsnav>
-					<li class="ddrtabsnav__item ddrtabsnav__item_active" ddrtabsitem="sectionsTabSectionsAdmin" onclick="$.loadSiteSections(this, 'admin')">Разделы админ. панели</li>
-					<li class="ddrtabsnav__item" ddrtabsitem="sectionsTabSectionsSite" onclick="$.loadSiteSections(this, 'site')">Разделы клиентской части</li>
+					<li
+						class="ddrtabsnav__item ddrtabsnav__item_active"
+						ddrtabsitem="sectionsTabSectionsAdmin"
+						onclick="$.loadSiteSections(this, 'admin', this.classList.contains('ddrtabsnav__item_active'))"
+						>Разделы админ. панели</li>
+					<li
+						class="ddrtabsnav__item"
+						ddrtabsitem="sectionsTabSectionsSite"
+						onclick="$.loadSiteSections(this, 'site', this.classList.contains('ddrtabsnav__item_active'))"
+						>Разделы клиентской части</li>
 				</ul>
 			</div>
 			
@@ -82,7 +90,8 @@
 	adminSectionsCrud();
 	
 	
-	$.loadSiteSections = (tab, type) => {
+	$.loadSiteSections = (tab, type, isActive) => {
+		if (isActive) return;
 		
 		$('#sectionsTabSCard').find('[ddrtablebody]').empty();
 		

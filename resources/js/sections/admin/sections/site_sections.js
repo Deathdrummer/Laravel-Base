@@ -27,7 +27,7 @@ export async function siteSectionsCrud() {
 			return false;
 		}
 		
-		$('#siteSectionsTable').blockTable('buildTable');
+		//$('#siteSectionsTable').blockTable('buildTable');
 		//wait(false);
 		//enableButtons(true);
 		changeInputs({'[save], [update]': 'enable'});
@@ -66,7 +66,7 @@ export async function siteSectionsCrud() {
 				if (data) $(container).append(data);
 				if (error) $.notify(error.message, 'error');
 				$('#siteSectionsTable').blockTable('scroll');
-				$('#siteSectionsTable').blockTable('buildTable');
+				//$('#siteSectionsTable').blockTable('buildTable');
 			});
 		}
 		
@@ -97,10 +97,10 @@ export async function siteSectionsCrud() {
 				if (data) {
 					$(row).replaceWith(data);
 					$.notify('Запись успешно сохранена!');
-					$('#siteSectionsTable').blockTable('buildTable');
+					//$('#siteSectionsTable').blockTable('buildTable');
 					
 					const {id, title} = payload;
-					$('#adminSectionsTable').find('[name="parent_id"]').each((k, item) => {
+					$('#siteSectionsTable').find('[name="parent_id"]').each((k, item) => {
 						$(item).children().last().after(`<option value="${id}">${title}</option>`);
 					});
 				}
@@ -182,6 +182,12 @@ export async function siteSectionsCrud() {
 						} 
 						wait(false);
 						removeSiteSectionWait.destroy();
+						
+						
+						$('#siteSectionsTable').find('[name="parent_id"]').each((k, item) => {
+							$(item).children(`[value="${id}"]`).remove();
+						});
+						
 					});
 					
 				}

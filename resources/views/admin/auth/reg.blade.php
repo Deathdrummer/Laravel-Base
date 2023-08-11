@@ -18,31 +18,35 @@
 
 
 <div id="regForm" class="auth__formblock">
-	<div class="auth__row">
-		<x-input type="text" name="name" value="" class="auth__field" group="auth" label="Ваше имя" />
-	</div>
-	
-	<div class="auth__row">
-		<x-input type="email" name="email" value="" class="auth__field" group="auth" label="E-mail" />
-	</div>
-	
-	<div class="auth__row">
-		<x-input type="password" name="password" value="" class="auth__field" group="auth" label="Пароль" />
-	</div>
-	
-	<div class="auth__row">
-		<x-input type="password" name="password_confirmation" value="" class="auth__field" group="auth" label="Повторить пароль" />
-	</div>
-	
-	<div class="auth__row">
-		<x-checkbox name="agreement" class="auth__field" label="{!!__('auth.agreement')!!}" group="normal" />
-	</div>
-	
-	<input type="hidden" name="locale" value="{{App::currentLocale()}}">
-	
-	<div class="auth__row">
-		<x-button class="pointer" id="regBtn" group="auth">{{__('auth.reg')}}</x-button>
-	</div>
+	@setting('admin_reg')
+		<div class="auth__row">
+			<x-input type="text" name="name" value="" class="auth__field" group="auth" label="Ваше имя" />
+		</div>
+		
+		<div class="auth__row">
+			<x-input type="email" name="email" value="" class="auth__field" group="auth" label="E-mail" />
+		</div>
+		
+		<div class="auth__row">
+			<x-input type="password" name="password" value="" class="auth__field" group="auth" label="Пароль" />
+		</div>
+		
+		<div class="auth__row">
+			<x-input type="password" name="password_confirmation" value="" class="auth__field" group="auth" label="Повторить пароль" />
+		</div>
+		
+		<div class="auth__row">
+			<x-checkbox name="agreement" class="auth__field" label="{!!__('auth.agreement')!!}" group="normal" />
+		</div>
+		
+		<input type="hidden" name="locale" value="{{App::currentLocale()}}">
+		
+		<div class="auth__row">
+			<x-button class="pointer" id="regBtn" group="auth">{{__('auth.reg')}}</x-button>
+		</div>
+	@else
+		<p class="fz18px text-center color-red">Регистрация запрещена!</p>
+	@endsetting
 </div>
 
 

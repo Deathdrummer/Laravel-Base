@@ -30,7 +30,6 @@ class Permissions extends Controller {
 	
 	
 	public function __construct() {
-		
 		/* 
 		$this->middleware('throttle:10,1')->only([
 			'store_show',
@@ -56,6 +55,10 @@ class Permissions extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+		
+		logger($request->all());
+		
+		
 		$validData = $request->validate([
 			'views' => 'required|string',
 			'guard' => 'required|string'
@@ -234,6 +237,11 @@ class Permissions extends Controller {
 	
 	
 	
+	
+	//-------------------------------------------------------------------------------------------------------------------------
+	
+	
+	
 	/**
 	 * @param 
 	 * @return 
@@ -273,7 +281,7 @@ class Permissions extends Controller {
 		
 		$this->addSettingToGlobalData('permissions_groups', 'id', 'name', 'group:'.$guard);
 		
-		return $this->view($viewPath.'.list', compact('list', 'guard'));
+		return $this->view($viewPath.'.list', compact('list', 'guard'), ['withoutPayload' => true]);
 	}
 	
 	

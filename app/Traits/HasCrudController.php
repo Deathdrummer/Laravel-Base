@@ -15,7 +15,10 @@ trait HasCrudController {
 	protected function view(?string $viewPath = null, $data = null, array $mergeData = [], array $headers = []) {
 		if (!$viewPath) return false;
 		$data['data'] = $this->data;
-		$headers['payload'] = json_encode($data);
+		
+		$withPayload = (isset($mergeData['withoutPayload']) && $mergeData['withoutPayload'] === true) ? false : true;
+		if ($withPayload) $headers['payload'] = json_encode($data);
+		
 		return response(view($viewPath, $data, $mergeData))->withHeaders($headers);
 	}
 	
@@ -27,7 +30,10 @@ trait HasCrudController {
 	protected function viewWithLastSortIndex(?string $model = null, $viewPath, $data = null, $sortField = '_sort') {
 		if (!$model) return false;
 		$data['data'] = $this->data;
-		$headers['payload'] = json_encode($data);
+		
+		$withPayload = (isset($mergeData['withoutPayload']) && $mergeData['withoutPayload'] === true) ? false : true;
+		if ($withPayload) $headers['payload'] = json_encode($data);
+		
 		return response()->view($viewPath, $data)->header('x-last-sort-index', $this->_getLastSortIndex($model, $sortField));
 	}
 	

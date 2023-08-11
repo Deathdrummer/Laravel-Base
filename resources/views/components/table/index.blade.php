@@ -46,7 +46,10 @@
 				$(row).find('[ddrtabletd]:eq('+cIndex+')').css('width', width+'px');
 			});
 			$(row).addClass('ddrtable__tr_visible');
-			if (bodyRows.length == rIndex + 1) $(row).setAttrib('ddrtablepartend');
+			if (bodyRows.length == rIndex + 1) {
+				$(row).setAttrib('ddrtablepartend');
+				
+			}
 		});
 	} else {
 		$(bodyRows).find('[ddrtabletd]').css('width', (100 / headCells.length)+'%');
@@ -54,6 +57,29 @@
 	
 	
 	
+	
+	
+		
+	$(selector).ddrWatch('mutate', {
+		childList: false,
+		subtree: false,
+		attributes: false,
+		//attributeFilter: ['ddrtabletr'],
+	}, function(mutationList, observer) {
+		for (const mutation of mutationList) {
+			if (mutation.target.classList.contains('ddrtable__body') && mutation.type === "childList" && mutation.addedNodes.length && mutation.addedNodes[0].classList.contains('ddrtable__tr')) {
+				$(selector).blockTable('buildTable');
+			}
+		}
+	});
+	
+		
+		
+		
+		
+		
+		
+		
 		
 	/*$(headCells).each(function(index, cell) {
 		let width = Math.max($(cell).width(), $(cell)[0].offsetWidth, $(cell)[0].clientWidth, $(cell).outerWidth());

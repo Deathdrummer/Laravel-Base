@@ -42,6 +42,8 @@
 							class="w100"
 							:options="$data['permissions_groups']"
 							value="{{$item['group'] ?? null}}"
+							choose="Вкладка не выбрана"
+							empty-has-value
 							{{-- action="permissionsSectionSetGroup:{{$item['id']}},{{$guard}}-section-{{$section}},{{$item['title']}}" --}}
 							/>
 					</td>
