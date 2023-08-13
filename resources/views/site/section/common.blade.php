@@ -6,6 +6,5 @@
 		>
 		<h2>{{$pageTitle}}</h2>
 		
-		
 	</x-card>
 </section>

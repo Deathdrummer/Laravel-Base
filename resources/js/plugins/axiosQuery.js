@@ -42,6 +42,11 @@ export default function axiosQuery(method = null, url = false, data = {}, respon
 					};
 					
 				} else if (stat >= 400 && stat < 500) { // Ошибка клиента
+					if (isDev) {
+						$.notify('Ошибка клиента: '+data.full, 'error');
+						console.error('Ошибка клиента: '+data.full);
+					}
+					
 					response = {
 						data: false,
 						error: data,
@@ -50,6 +55,11 @@ export default function axiosQuery(method = null, url = false, data = {}, respon
 					};
 					
 				} else { // Другие ошибки
+					if (isDev) {
+						$.notify('Ошибка сервера: '+data.full, 'error');
+						console.error('Ошибка сервера: '+data.full);
+					}
+					
 					response = {
 						data: false,
 						error: data,

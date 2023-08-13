@@ -99,6 +99,12 @@ class Handler extends ExceptionHandler
 			$errData = $details->getData();
 			$errData->status = $details->getStatusCode();
             $errData->message = __('errors.'.$errData->status) ?: $details->message;
+			
+			$message = $details?->original['message'] ?? null;
+			$file = $details?->original['file'] ?? null;
+			$line = $details?->original['line'] ?? null;
+			
+			$errData->full = "[{$errData->status}] \"{$message}\" of file: {$file}:{$line} on line: {$line}";
 			return response()->json($errData);
 		}
 		return $details;

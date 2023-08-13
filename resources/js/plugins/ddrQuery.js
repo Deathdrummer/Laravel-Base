@@ -59,6 +59,11 @@ function _action(method, url, data = {}, params = {}) {
 					};
 					
 				} else if (stat >= 400 && stat < 500) { // Ошибка клиента
+					if (isDev) {
+						$.notify('Ошибка клиента: '+data.full, 'error');
+						console.error('Ошибка клиента: '+data.full);
+					}
+					
 					response = {
 						data: false,
 						error: data,
@@ -67,6 +72,11 @@ function _action(method, url, data = {}, params = {}) {
 					};
 					
 				} else { // Другие ошибки
+					if (isDev) {
+						$.notify('Ошибка сервера: '+data.full, 'error');
+						console.error('Ошибка сервера: '+data.full);
+					}
+					
 					response = {
 						data: false,
 						error: data,
