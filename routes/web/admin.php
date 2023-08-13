@@ -119,13 +119,13 @@ Route::post('/reset-password', function (Request $request) {
 
 
 // админка prefix('admin') уже подключен
-Route::middleware(['lang'])->get('/{section?}', function (Request $request, $section = null) {
-	if (!Auth::guard('admin')->check() && $section) return redirect()->route('admin');
+Route::middleware(['lang'])->get('/{page?}', function (Request $request, $page = null) {
+	if (!Auth::guard('admin')->check() && $page) return redirect()->route('admin');
 	
 	$settingsService = App::make(Settings::class);
 	$settings = $settingsService->getMany('company_name', 'admin_start_page'); // прописать настройки для вывода в общий шаблон админ. панели
 	
-	$activeNav = $section ?: ($settings['admin_start_page'] ?? 'common');
+	$activeNav = $page ?: ($settings['admin_start_page'] ?? 'common');
 	
 	$locale = App::currentLocale();
 	
@@ -148,6 +148,7 @@ Route::middleware(['lang'])->get('/{section?}', function (Request $request, $sec
 Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', function (Request $request/* , Settings $settings */) {
 	$section = $request->input('section');
 	$pageTitle = [];
+	$lang = App::currentLocale();
 	
 	if (!AdminSection::where('section', $section)->count()) {
 		return response()
@@ -170,7 +171,7 @@ Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', functi
 	if (count($rootSection) > 1) {
 		$pageData = AdminSection::select('page_title')
 			->where('section', $rootSection)->first();
-		$pageTitle[] = $pageData['page_title'];
+		$pageTitle[] = $pageData['page_title'][$lang] ?? null;
 	}
 	
 	
@@ -198,7 +199,8 @@ Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', functi
 			$sectionPath))
 		->first();
 	
-	$pageTitle[] = $page ? $page->page_title : null; /* urlencode(__('custom.no_section_header_title')) */
+	
+	$pageTitle[] = ($page->page_title[$lang] ?? false) ?: ($page->page_title[config('app.fallback_locale')] ?? false); /* urlencode(__('custom.no_section_header_title')) */
 	
 	return response()->view('admin.section.'.$sectionPath, []/* $settingsData */, 200)->header('X-Page-Title', json_encode($pageTitle));
 });
@@ -216,10 +218,11 @@ Route::middleware(['lang', 'auth:admin', 'isajax'])->post('/get_section', functi
 
 
 
-Route::post('/lang', function (Request $request) {
+Route::post('/set_lang', function (Request $request) {
 	$locale = $request->input('locale');
 	if (!$locale) return response()->json(['no_locale_send' => true]);
-	$locales = config('app.locales_list');
+	$locales = setting('locales_list', 'locale')->toArray();
+	
 	if (!$locales) return response()->json(['no_locales' => true]);
 	if (!in_array($locale, $locales)) return response()->json(['locale_not_exists' => true]);
 	

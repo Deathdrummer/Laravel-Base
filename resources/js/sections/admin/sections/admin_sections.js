@@ -1,4 +1,4 @@
-const viewsPath = 'admin.section.site_sections.render.admin_sections';
+const viewsPath = 'admin.section.system.render.admin_sections';
 	
 
 export async function adminSectionsCrud() {

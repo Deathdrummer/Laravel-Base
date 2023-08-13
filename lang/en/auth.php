@@ -30,6 +30,7 @@ return [
 	'reg'                   => 'Register',
 	'logout'                => 'Logout',
 	'forgot_pass'           => 'Forgot your password?',
+	'verify'           		=> 'Verify Account',
 	'enter_the_password'    => 'Enter your Email to recover your password',
 	'submit'                => 'Submit',
 	'go_back'               => 'Go back',

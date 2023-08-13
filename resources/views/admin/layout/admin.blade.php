@@ -19,35 +19,46 @@
 			</div>
 			
 			<div class="header__right">
-				<div class="row justify-content-between g-20">
+				<div class="row justify-content-between g-0">
 					<div class="col-auto">
-						<div class="header__block">
-							<p class="header__pagetitle" id="sectionTitle"></p>
+						<div class="row justify-content-between g-20">
+							<div class="col-auto">
+								<div class="header__block">
+									<p class="header__pagetitle" id="sectionTitle"></p>
+								</div>
+							</div>
+							
+							<teleport id="headerTeleport1"></teleport>
+							<teleport id="headerTeleport2"></teleport>
+							<teleport id="headerTeleport3"></teleport>
+							
 						</div>
 					</div>
-					
-					<teleport id="headerTeleport1"></teleport>
-					<teleport id="headerTeleport2"></teleport>
-					<teleport id="headerTeleport3"></teleport>
-					
-					
-					{{-- <div class="col-auto">
-						<div class="header__block">
-							<x-localebar group="large" />
-						</div>
-					</div> --}}
-					{{-- <div class="col-auto">
-						<div class="header__block">
-							@unlessverify('admin')
-								<x-button id="resendVerifyLinkBtn">Выслать ссылку повторно</x-button>
-							@endverify
-						</div>
-					</div> --}}
 					<div class="col-auto">
-						<div class="header__block">
-							<div class="header__logout noselect" logout>
-								<i class="fa-solid fa-arrow-right-from-bracket"></i>
-								<span>{{__('auth.logout')}}</span>
+						<div class="row justify-content-between g-20">
+							<div class="col-auto">
+								<div class="header__block">
+									@unlessverify('admin')
+										<x-button size="small" variant="orange" id="resendVerifyLinkBtn">{{__('auth.verify')}}</x-button>
+									@endverify
+								</div>
+							</div>
+							
+							<div class="col-auto">
+								<div class="header__block">
+									<x-localebar guard="admin" group="large" />
+								</div>
+							</div>
+							
+							<div class="col-auto">
+								<div class="col-auto">
+									<div class="header__block">
+										<div class="header__logout noselect" logout>
+											<i class="fa-solid fa-arrow-right-from-bracket"></i>
+											<span>{{__('auth.logout')}}</span>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -76,7 +87,7 @@
 									class="aside__navitem"
 									@if($item['parent_id'] == 0 && $item['nav'])loadsection="{{$item['section']}}"@endif
 									>
-									<span>{{$item['title']}}</span>
+									<span>{{$item['title'] ?? '---'}}</span>
 									@isset($item['children'])
 										<div class="navitemhandler">
 											<i></i>
@@ -89,7 +100,7 @@
 										@foreach($item['children'] as $children)
 											<li @class(['active' => $activeNav == $children['section']])>
 												<div class="aside__navitem" @isset($children['section']) loadsection="{{$children['section']}}" @endisset>
-													<span>{{$children['title']}}</span>
+													<span>{{$children['title'] ?? '---'}}</span>
 												</div>
 											</li>
 										@endforeach
@@ -193,7 +204,7 @@
 	
 	$('body').on(tapEvent, '#resendVerifyLinkBtn', function() {
 		let btn = $(this).closest('.button');
-		let ddrWait = $(btn).ddrWait({iconHeight: '25px', backgroundColor: '#fffc', iconColor: 'hue-rotate(170deg)'});
+		let ddrWait = $(btn).ddrWait({iconHeight: '15px', backgroundColor: '#fffc', iconColor: 'hue-rotate(170deg)'});
 		
 		$.ddrFormSubmit({
 			url: '/admin/email/verification-notification',

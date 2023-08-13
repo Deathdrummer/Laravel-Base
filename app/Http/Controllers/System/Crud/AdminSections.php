@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Models\System\AdminSection;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -65,8 +66,10 @@ class AdminSections extends Controller {
         
 		$list = AdminSection::whereNot('section', 'site_sections')->orderBy('_sort', 'ASC')->get();
 		
-		$listToSelect = $list->where('parent_id', 0)->pluck('title', 'id');
-		$listToSelect->prepend('Нет', 0);
+		$lang = App::currentLocale();
+		$listToSelect = $list->where('parent_id', 0)->pluck("title.{$lang}", 'id');
+		
+		$listToSelect->prepend('-', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
 		
 		$itemView = $viewPath.'.item';
@@ -86,10 +89,11 @@ class AdminSections extends Controller {
 		$newItemIndex = $request->input('newItemIndex');
 		if (!$viewPath) return response()->json(['no_view' => true]);
 		
+		$lang = App::currentLocale();
 		$listToSelect = AdminSection::where('parent_id', 0)
 			->orderBy('_sort', 'ASC')
 			->get()
-			->pluck('title', 'id');
+			->pluck("title.{$lang}", 'id');
 		
 		$listToSelect->prepend('Нет', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
@@ -137,8 +141,8 @@ class AdminSections extends Controller {
 		
 		$validFields = $request->validate([
 			'section'		=> 'required|string|unique:admin_sections,section',
-			'title'			=> 'required|string|unique:admin_sections,title',
-			'page_title'	=> 'required|string',
+			'title'			=> 'required|array',
+			'page_title'	=> 'required|array',
 			'parent_id'		=> 'nullable|numeric',
 			'visible'		=> 'required|boolean',
 			'sort'			=> 'required|regex:/[0-9]+/',
@@ -147,10 +151,11 @@ class AdminSections extends Controller {
 		
 		if (!$res = AdminSection::create($validFields)) return null;
 		
+		$lang = App::currentLocale();
 		$listToSelect = AdminSection::where('parent_id', 0)
 			->orderBy('_sort', 'ASC')
 			->get()
-			->pluck('title', 'id');
+			->pluck("title.{$lang}", 'id');
 		
 		$listToSelect->prepend('Нет', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
@@ -206,12 +211,8 @@ class AdminSections extends Controller {
         		'string',
 				Rule::unique('admin_sections')->ignore(AdminSection::where('id', $id)->first()),
 			],
-			'title'	=> [
-				'required',
-        		'string',
-				Rule::unique('admin_sections')->ignore(AdminSection::where('id', $id)->first()),
-			],
-			'page_title'	=> 'required|string',
+			'title'			=> 'required|array',
+			'page_title'	=> 'required|array',
 			'parent_id'		=> 'nullable|numeric',
 			'visible'		=> 'required|boolean',
 			'sort'			=> 'required|regex:/[0-9]+/',

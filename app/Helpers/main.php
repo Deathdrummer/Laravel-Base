@@ -342,7 +342,7 @@ if (! function_exists('dateFormatter')) {
 
 //------------------------------------------------------------
 
-if (! function_exists('setting')) {
+if (! function_exists('isSetting')) {
 	/**
 	 * Проверка указанной настройки
 	 * @param string|null  $setting
@@ -350,7 +350,7 @@ if (! function_exists('setting')) {
 	 * @param bool  $strict
 	 * @return bool
 	*/
-	function setting(?string $setting = null, ?bool $expectedValue = null, bool $strict = false): bool {
+	function isSetting(?string $setting = null, ?bool $expectedValue = null, bool $strict = false): bool {
 		$settingsService = app()->make(Settings::class);
 		$settingVal = $settingsService->get($setting);
 		
@@ -361,6 +361,31 @@ if (! function_exists('setting')) {
 		return !!$settingVal;
 	}
 }
+
+
+
+if (! function_exists('setting')) {
+	/**
+	 * Получение указанной настройки
+	 * @param string|null  $setting
+	 * @return mixed
+	*/
+	function setting(?string $setting = null, ?string $column = null, ?string $columnKey = null): mixed {
+		$settingsService = app()->make(Settings::class);
+		$settingVal = $settingsService->get($setting);
+		
+		$settingVal = isJson($settingVal) ? json_decode($settingVal, true) : $settingVal;
+		
+		if ($column) {
+			$settingVal = $settingVal->pluck($column, $columnKey);
+		}
+		
+		return $settingVal;
+	}
+}
+
+
+
 
 
 

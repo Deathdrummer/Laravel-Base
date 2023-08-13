@@ -18,7 +18,7 @@
 
 
 <div id="regForm" class="auth__formblock">
-	@setting('admin_reg')
+	@isSetting('admin_reg')
 		<div class="auth__row">
 			<x-input type="text" name="name" value="" class="auth__field" group="auth" label="Ваше имя" />
 		</div>

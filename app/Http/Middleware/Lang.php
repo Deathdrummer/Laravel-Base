@@ -21,7 +21,8 @@ class Lang {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-		$this->locale->set('admin');
+		$guard = $request->is('admin/*') ? 'admin' : 'site';
+		$this->locale->set($guard);
         return $next($request);
     }
 }

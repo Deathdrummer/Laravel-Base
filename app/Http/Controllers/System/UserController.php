@@ -65,7 +65,7 @@ class UserController extends Controller {
 	 * @return 
 	 */
 	public function register(UserRegRequest $req) {
-		if (!setting('site_reg')) return response()->json(['reg' => __('auth.reg_failed')]);
+		if (!isSetting('site_reg')) return response()->json(['reg' => __('auth.reg_failed')]);
 		$validFields = $req->validated();
 		if (!$user = User::create($validFields)) return response()->json(['reg' => __('auth.reg_failed')]);
 		event(new Registered($user));

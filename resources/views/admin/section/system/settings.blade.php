@@ -9,6 +9,7 @@
 					<ul class="ddrtabsnav" ddrtabsnav>
 						<li class="ddrtabsnav__item ddrtabsnav__item_active" ddrtabsitem="systemTab1">Общие настройки</li>
 						<li class="ddrtabsnav__item" ddrtabsitem="systemTab2">Заголовки и названия</li>
+						<li class="ddrtabsnav__item" ddrtabsitem="systemTab3">Языки</li>
 					</ul>
 				</div>
 				
@@ -78,6 +79,22 @@
 									/>
 							</div>
 						</div>
+					</div>
+					
+					<div class="ddrtabscontent__item" ddrtabscontentitem="systemTab3">
+						<x-simplelist
+							setting="locales_list"
+							fieldset="Код локали:w15rem|input|locale,Аббревиатура:w15rem|input|abbr,Надпись:w20rem|input|title"
+							{{-- options="name_type;foo:fooval,bar:barval|name_radio;foo:rool,bar:tool" --}}
+							group="normal"
+							/>
+						
+						{{-- <x-simplelist
+							setting="testlist"
+							fieldset="Поле ввода:w20rem|input|name_title,Текстовое поле:w20rem|textarea|name_text,Выпадающий список:w20rem|select|name_type,Радио:w20rem|radio|name_radio,Чекбокс|checkbox|name_checkbox"
+							options="name_type;foo:fooval,bar:barval|name_radio;foo:rool,bar:tool"
+							group="small"
+							/> --}}
 					</div>
 				</div>
 				{{--  --}}

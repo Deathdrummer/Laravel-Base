@@ -34,7 +34,7 @@
 	<div class="col-auto"><p class="auth__textlink auth__forgot" gotoauthform="forgot-password">{{__('auth.forgot_pass')}}</p></div>
 	
 	
-	@if(setting('admin_reg'))
+	@if(isSetting('admin_reg'))
 		<div class="col-auto"><p class="auth__textlink auth__reg" gotoauthform="reg">{{__('auth.reg')}}</p></div>
 	@else
 		@unless($hasMainAdmin)

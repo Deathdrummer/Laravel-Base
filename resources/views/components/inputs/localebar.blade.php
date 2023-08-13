@@ -4,6 +4,7 @@
 
 @props([
 	'id' 	=> 'localebar'.rand(0,9999999),
+	'guard'	=> 'site',
 	'group'	=> $groupWrap,
 	'size'	=> $groupWrap,
 ])
@@ -17,10 +18,12 @@
 			'localebar__handler',
 			$group.'-localebar__handler' => $group
 		])
-		touch="{{($group ? $group.'-' : '')}}localebar_opened">
+		touch="{{($group ? $group.'-' : '')}}localebar_opened"
+		title="{{$locales[$currentLocale]['title']}}"
+		>
 		
-		<div><img src="{{Vite::asset('resources/images/flags/'.$currentLocale.'.png')}}" alt="{{$locales[$currentLocale]}}"></div>
-		<span class="localebar__label">{{$locales[$currentLocale]}}</span>
+		<div><img src="{{Vite::asset('resources/images/flags/'.$currentLocale.'.svg')}}" alt="{{$locales[$currentLocale]['abbr']}}"></div>
+		<span class="localebar__label">{{$locales[$currentLocale]['abbr']}}</span>
 		<i class="fa-solid fa-chevron-down"></i>
 	</div>
 	
@@ -32,10 +35,15 @@
 				'localebar__list',
 				$group.'-localebar__list' => $group
 			])>
-			@foreach($locales as $locale => $title)
-				<li value="{{$locale}}" @class(['active' => $currentLocale == $locale]) chooselocale="{{$locale}}">
-					<div><img src="{{Vite::asset('resources/images/flags/'.$locale.'.png')}}" alt="{{$title}}"></div>
-				 	<span>{{$title}}</span>
+			@foreach($locales as ['locale' => $locale, 'abbr' => $abbr, 'title' => $title])
+				<li
+					value="{{$locale}}"
+					@class(['active' => $currentLocale == $locale])
+					chooselocale="{{$locale}}"
+					title="{{$title}}"
+					>
+					<div><img src="{{Vite::asset('resources/images/flags/'.$locale.'.svg')}}" alt="{{$abbr}}"></div>
+				 	<span>{{$abbr}}</span>
 				 </li>
 			@endforeach
 		</ul>
@@ -45,6 +53,7 @@
 
 <script type="module">
 	const selector = '#{{$id}}',
+		guard = '{{$guard}}',
 		readyCls = '{{($group ? $group.'-' : '')}}localebar_ready',
 		openedCls = '{{($group ? $group.'-' : '')}}localebar_opened';
 	
@@ -61,7 +70,10 @@
 		$(selector).removeClass(openedCls);
 		$(selector).find('[touch]').attr('aria-expanded', false);
 		
-		axios.post('/admin/lang', {locale}, {
+		
+		let route = guard == 'site' ? '/set_lang' : ((guard == 'admin' ? '/admin/set_lang' : null));
+		
+		axios.post(route, {locale}, {
 			responseType: 'json'
 		}).then(function ({data, status, statusText, headers, config}) {
 			if (data?.status) {

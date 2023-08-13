@@ -149,6 +149,7 @@ Route::middleware(['lang'])->get('/{page?}', function (Request $request, $page =
 Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', function (Request $request, Settings $settings) {
 	$section = $request->input('section');
 	$pageTitle = [];
+	$lang = App::currentLocale();
 	
 	if (!Section::where('section', $section)->count()) {
 		return response()
@@ -169,7 +170,7 @@ Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', functio
 	if (count($rootSection) > 1) {
 		$pageData = Section::select('page_title')
 			->where('section', $rootSection)->first();
-		$pageTitle[] = $pageData['page_title'];
+		$pageTitle[] = $pageData['page_title'][$lang];
 	}
 	
 	if (!View::exists('site.section.'.$section)) {
@@ -195,11 +196,12 @@ Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', functio
 			$sectionPath))
 		->first();
 	
+	
 	// в таблице sections прописывается массив тех настроек, что нужно подгрузить
 	$settingsData = $page['settings'] ? ($settings->getMany($page['settings'])->toArray() ?: []) : []; 
 	
 	
-	$pageTitle[] = $page ? $page->page_title : null; /* urlencode(__('custom.no_section_header_title')) */
+	$pageTitle[] = ($page->page_title[$lang] ?? null) ?: $page->page_title[config('app.fallback_locale')]; /* urlencode(__('custom.no_section_header_title')) */
 	
 	$user = Auth::guard('site')->user();
 	
@@ -207,7 +209,7 @@ Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', functio
 	$data = [
 		'user' 		=> $user,
 		'setting' 	=> $settingsData,
-		'pageTitle'	=> $page->page_title,
+		'pageTitle'	=> $page->page_title[$lang] ?? ($page->page_title[config('app.fallback_locale')] ?? false),
 	];
 	
 	
@@ -226,10 +228,11 @@ Route::middleware(['lang', 'auth:site', 'isajax'])->post('/get_section', functio
 
 
 
-Route::post('/lang', function (Request $request) {
+Route::post('/set_lang', function (Request $request) {
 	$locale = $request->input('locale');
 	if (!$locale) return response()->json(['no_locale_send' => true]);
-	$locales = config('app.locales_list');
+	$locales = setting('locales_list', 'locale')->toArray();;
+	
 	if (!$locales) return response()->json(['no_locales' => true]);
 	if (!in_array($locale, $locales)) return response()->json(['locale_not_exists' => true]);
 	

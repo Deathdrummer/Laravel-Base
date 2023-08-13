@@ -152,4 +152,6 @@ Route::resource('admin_sections', AdminSections::class);
 // Разделы клиентской части
 Route::post('/site_sections/store_show', [SiteSections::class, 'store_show']);
 Route::post('/site_sections/create_files', [SiteSections::class, 'create_files']);
+Route::get('/site_sections/settings', [SiteSections::class, 'settings_form']);
+Route::post('/site_sections/settings', [SiteSections::class, 'settings_set']);
 Route::resource('site_sections', SiteSections::class);

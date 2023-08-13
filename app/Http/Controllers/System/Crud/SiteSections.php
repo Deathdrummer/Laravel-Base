@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Controller;
 use App\Models\System\Section;
+use App\Models\System\Setting;
 use App\Traits\HasCrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -65,8 +67,10 @@ class SiteSections extends Controller {
         
 		$list = Section::orderBy('_sort', 'ASC')->get();
 		
-		$listToSelect = $list->where('parent_id', 0)->pluck('title', 'id');
-		$listToSelect->prepend('Нет', 0);
+		$lang = App::currentLocale();
+		$listToSelect = $list->where('parent_id', 0)->pluck("title.{$lang}", 'id');
+		
+		$listToSelect->prepend('-', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
 		
 		$itemView = $viewPath.'.item';
@@ -86,10 +90,11 @@ class SiteSections extends Controller {
 		$newItemIndex = $request->input('newItemIndex');
 		if (!$viewPath) return response()->json(['no_view' => true]);
 		
+		$lang = App::currentLocale();
 		$listToSelect = Section::where('parent_id', 0)
 			->orderBy('_sort', 'ASC')
 			->get()
-			->pluck('title', 'id');
+			->pluck("title.{$lang}", 'id');
 		
 		$listToSelect->prepend('Нет', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
@@ -137,8 +142,8 @@ class SiteSections extends Controller {
 		
 		$validFields = $request->validate([
 			'section'		=> 'required|string|unique:user_sections,section',
-			'title'			=> 'required|string|unique:user_sections,title',
-			'page_title'	=> 'required|string',
+			'title'			=> 'required|array',
+			'page_title'	=> 'required|array',
 			'parent_id'		=> 'nullable|numeric',
 			'visible'		=> 'required|boolean',
 			'sort'			=> 'required|regex:/[0-9]+/',
@@ -147,10 +152,11 @@ class SiteSections extends Controller {
 		
 		if (!$res = Section::create($validFields)) return null;
 		
+		$lang = App::currentLocale();
 		$listToSelect = Section::where('parent_id', 0)
 			->orderBy('_sort', 'ASC')
 			->get()
-			->pluck('title', 'id');
+			->pluck("title.{$lang}", 'id');
 		
 		$listToSelect->prepend('Нет', 0);
 		$this->data['parentItems'] = $listToSelect->toArray();
@@ -206,12 +212,8 @@ class SiteSections extends Controller {
         		'string',
 				Rule::unique('user_sections')->ignore(Section::where('id', $id)->first()),
 			],
-			'title'	=> [
-				'required',
-        		'string',
-				Rule::unique('user_sections')->ignore(Section::where('id', $id)->first()),
-			],
-			'page_title'	=> 'required|string',
+			'title'			=> 'required|array',
+			'page_title'	=> 'required|array',
 			'parent_id'		=> 'nullable|numeric',
 			'visible'		=> 'required|boolean',
 			'sort'			=> 'required|regex:/[0-9]+/',
@@ -291,6 +293,55 @@ class SiteSections extends Controller {
 		return response()->json($res);
 	}
 	
+	
+	
+	
+	
+	
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function settings_form(Request $request) {
+		[
+			'id' => $id,
+			'views' => $viewPath,
+		] = $request->validate([
+			'id' 	=> 'required|numeric',
+			'views' => 'required|string',
+		]);
+		
+		$settings = Setting::get()->groupBy('group');
+		
+		$section = Section::find($id);
+		$sectionSettings = $section->settings ?: [];
+		
+		return $this->view($viewPath.'.settings_form', compact('settings', 'sectionSettings'));
+	}
+	
+	
+	
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	*/
+	public function settings_set(Request $request) {
+		[
+			'id' 			=> $id,
+			'checkedItems'	=> $checkedItems,
+		] = $request->validate([
+			'id' 			=> 'required|numeric',
+			'checkedItems'	=> 'present|array|nullable',
+		]);
+		
+		$res = Section::where('id', $id)->update(['settings' => $checkedItems ?: null]);
+		
+		return response()->json($res);
+	}
 	
 	
 }

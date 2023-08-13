@@ -43,7 +43,7 @@
 				@if(isset($show_locale) && $show_locale)
 					<div class="col-auto">
 						<div class="header__block">
-							<x-localebar group="large" />
+							<x-localebar guard="site" group="large" />
 						</div>
 					</div>
 				@endif

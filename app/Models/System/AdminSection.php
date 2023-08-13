@@ -63,15 +63,30 @@ class AdminSection extends Model {
         'page_title' => 'array',
     ];
 	
+	
+	
+	
+	/**
+     * Дополнительные поля
+	 *
+     * @var array
+     */
+	protected $appends = [
+        //'page_title_lang'
+    ];
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * @param string  $value
 	 * @return 
 	 */
 	public function setTitleAttribute($value) {
-		$lang = App::currentLocale();
-		$title = $this->attributes['title'] ?? [];
-		data_set($title, $lang, $value);
-		$this->attributes['title'] = is_array($title) ? json_encode($title) : $title;
+		$this->attributes['title'] = is_array($value) ? json_encode($value) : $value;
 	}
 	
 	/**
@@ -79,16 +94,12 @@ class AdminSection extends Model {
 	 * @return 
 	 */
 	public function setPageTitleAttribute($value) {
-		$lang = App::currentLocale();
-		$pageTitle = $this->attributes['page_title'] ?? [];
-		data_set($pageTitle, $lang, $value);
-		$this->attributes['page_title'] = is_array($pageTitle) ? json_encode($pageTitle) : $pageTitle;
+		$this->attributes['page_title'] = is_array($value) ? json_encode($value) : $value;
 	}
 	
 	
 	/**
      * 
-     *
      * @param string  $value
      * @return string
      */
@@ -100,28 +111,23 @@ class AdminSection extends Model {
 	
 	/**
      * 
-     *
      * @param string  $value
      * @return string
      */
     public function getTitleAttribute($value) {
 		$value = isJson($value) ? json_decode($value, true) : $value;
-		$lang = App::currentLocale();
-		return $value[$lang] ?? null;
+		return $value ?? null;
 	}
 	
 	/**
      * 
-     *
      * @param string  $value
      * @return string
      */
     public function getPageTitleAttribute($value) {
-		$value = isJson($value) ? json_decode($value, true, JSON_PRETTY_PRINT) : $value;
-		$lang = App::currentLocale();
-		return $value[$lang] ?? null;
+		$value = isJson($value) ? json_decode($value, true) : $value;
+		return $value ?? null;
 	}
-	
 	
 	
 	
@@ -132,6 +138,8 @@ class AdminSection extends Model {
 	 */
 	public function getSections($activeNav = false): Collection {
 		$navData = collect([]);
+		$lang = App::currentLocale();
+		
 		$sections = $this->select('id', 'section', 'title', 'parent_id', 'nav')
 						->where('visible', 1)
 						->orderBy('sort', 'ASC')
@@ -139,7 +147,11 @@ class AdminSection extends Model {
 						->filter(function ($item) {
 							if (auth('admin')->check() && auth('admin')->user()->is_main_admin) return true;
 							return auth('admin')->check() && auth('admin')->user()->can('section-'.$item['section'].':admin');
+						})->map(function($item) use($lang) {
+							$item['title'] = $item['title'][$lang] ?? $item['title'][App::getFallbackLocale()];
+							return $item;
 						});
+						
 			
 		if ($sections->isEmpty()) return $navData;
 		

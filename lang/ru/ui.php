@@ -8,6 +8,8 @@ return [
 	'locales'				=> [
 		'ru'	=> 'Ru',
 		'en'	=> 'En',
+		'fr'	=> 'Fr',
+		'kz'	=> 'Kz',
 	],
 	'close' 				=> 'Закрыть',
 	'done' 					=> 'Готово',

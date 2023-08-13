@@ -1,4 +1,4 @@
-const viewsPath = 'admin.section.site_sections.render.site_sections';
+const viewsPath = 'admin.section.system.render.site_sections';
 	
 
 export async function siteSectionsCrud() {
@@ -209,12 +209,12 @@ export async function siteSectionsCrud() {
 				title: 'Cтруктура файлов раздела',
 				//width, // ширина окна
 				html: `<p class="fz16px color-green">Создать структуру файлов для раздела ${title}?</p>`, // контент
-				buttons: ['ui.cancel', {title: 'ui.create', variant: 'purple', action: 'siteSectionsCreateFilesActions'}],
+				buttons: ['ui.cancel', {title: 'ui.create', variant: 'purple', action: 'siteSectionsCreateFilesAction'}],
 				centerMode: true,
 			});
 			
 			
-			$.siteSectionsCreateFilesActions = async (__) => {
+			$.siteSectionsCreateFilesAction = async (__) => {
 				wait();
 				
 				const {data, error, status, headers} = await ddrQuery.post('system/site_sections/create_files', {id, section});
@@ -238,10 +238,60 @@ export async function siteSectionsCrud() {
 					close();
 				}
 			}
+		}
+		
+		
+		
+		
+		
+		
+		$.siteSectionsSetSettings = async (btn, id, section, title) => {
+			const row = $(btn).closest('[ddrtabletr]');
 			
+			const {
+				wait,
+				close,
+			} = await ddrPopup({
+				url: 'system/site_sections/settings',
+				method: 'get',
+				params: {id, title, views: viewsPath},
+				title: `Настройки для раздела ${title}`,
+				width: 600,
+				buttons: ['ui.cancel', {title: 'ui.apply', variant: 'yellow', action: 'siteSectionsSetSettingsAction'}],
+			});
+			
+			
+			
+			
+			$.siteSectionsSetSettingsAction = async (btn) => {
+				wait();
+				const formData = $('#sectionSettingsForm').ddrForm();
+				
+				const checkedItems = [];
+				
+				for (const [setting, value] of Object.entries(formData)) {
+					if (value == 1) checkedItems.push(setting);
+				}
+				
+				const {data, error, status, headers} = await ddrQuery.post('system/site_sections/settings', {id, checkedItems});
+				
+				if (error) {
+					$.notify(error.message, 'error');
+					console.log(error.errors);
+					wait(false);
+					return false;
+				}
+				
+				if (data) {
+					$.notify('Настройки успешно применены!');
+					close();
+				}
+				
+			}
 			
 			
 		}
+		
 	
 	});
 	

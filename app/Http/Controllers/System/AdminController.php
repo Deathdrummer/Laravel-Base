@@ -76,7 +76,7 @@ class AdminController extends Controller {
 	 * @return 
 	 */
 	public function register(AdminRegRequest $req) {
-		if (!setting('admin_reg')) return response()->json(['reg' => __('auth.reg_failed')]);
+		if (!isSetting('admin_reg')) return response()->json(['reg' => __('auth.reg_failed')]);
 		$validFields = $req->validated();
 		if (AdminUser::where('is_main_admin', true)->count() == 0) $validFields['is_main_admin'] = true;
 		if (!$user = AdminUser::create($validFields)) return response()->json(['reg' => __('auth.reg_failed')]);
